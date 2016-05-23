@@ -54,7 +54,7 @@ export class Home {
 	
 	doRefresh(event) {
 		this.novelservice.getNovelList(true).then(data => {
-  			this.items = data.titles;
+  			this.items = data;
 			event.complete();
   		});
 	}
