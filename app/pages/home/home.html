@@ -1,0 +1,34 @@
+<ion-navbar *navbar>
+  <ion-title>Novel List</ion-title>
+  <ion-buttons end>
+    <button (tap)="hideSearch()">
+      <ion-icon name="search"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-navbar>
+
+<ion-content class="home">
+  <ion-searchbar
+    [(ngModel)]="myInput"
+    (input)="onInput($event)"
+    [hideCancelButton]="hideCancel"
+    [hidden]="isHidden">
+  </ion-searchbar>
+  <ion-refresher (refresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <!--<ion-item-sliding>-->
+      <ion-item *ngFor="let item of items" (hold)="test()" text-wrap [navPush]="pushPage" [navParams]="{data: item}">
+        {{item.title}}
+        <ion-icon name="arrow-forward" item-right></ion-icon>
+      </ion-item>
+      <!--<ion-item-options>
+        <button (tap)="addFav(item)">
+          <ion-icon ios="ios-star-outline" md="md-star"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>-->
+  </ion-list>
+</ion-content>
+<!---->

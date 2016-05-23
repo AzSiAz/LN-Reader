@@ -1,0 +1,9 @@
+<ion-navbar *navbar>
+  <ion-title>{{data.title}}</ion-title>
+</ion-navbar>
+
+<ion-content class="novel-chapter" padding>
+  <ion-scroll [innerHTML]="chapter" scrollY="true" scrollX="true">
+  </ion-scroll>
+
+</ion-content>

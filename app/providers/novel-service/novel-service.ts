@@ -1,0 +1,75 @@
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import 'rxjs/add/operator/map';
+import {SqlManager} from '../sql-manager/sql-manager';
+
+/*
+  Generated class for the NovelService provider.
+
+  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
+  for more info on providers and Angular 2 DI.
+*/
+
+@Injectable()
+export class NovelService {
+  	
+	http: Http;
+  
+	constructor(http: Http) {
+		this.http = http;
+	}
+
+	addFavorite(json) {
+		
+	}
+  
+	getNovelDetail(title) {
+		return new Promise(resolve => {
+			return SqlManager.getCacheNovel(title).then(data => {
+				if (typeof data === "object") {
+					resolve(data);
+				}
+				else {
+					this.http.get(`https://api.azsiaz.tech/title/query/?title=${title}`)
+					.map(res => res.json())
+					.subscribe(data => {
+						SqlManager.setCacheNovel(data);
+						resolve(data);
+					});
+				}
+			});
+		})
+	}
+
+	getNovelList(refresh = false) {
+		return new Promise(resolve => {
+			return SqlManager.getCacheNovelList(refresh).then(data => {
+				if (typeof data === "object") {
+					resolve(data);
+				}
+				else {
+					this.http.get(`https://api.azsiaz.tech/ln/${data}`)
+					.map(res => res.json())
+					.subscribe(data => {
+						SqlManager.setCacheNovelList(data, refresh);
+						resolve(data.titles);
+					})
+				}
+			});
+		})
+	}
+
+	getFavNovel() {
+	
+	}
+	
+	getChapter(chapter) {
+		return new Promise(resolve => {
+			this.http.get(`https://api.azsiaz.tech/chapter/query/?chapter=${chapter}`).map(res => res.text())
+			.subscribe(data => {
+				resolve(data);
+			});
+		})
+	}
+}
+
