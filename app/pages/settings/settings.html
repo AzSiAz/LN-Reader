@@ -1,4 +1,3 @@
-
 <ion-navbar *navbar>
   <ion-title>
     Settings
@@ -6,5 +5,20 @@
 </ion-navbar>
 
 <ion-content class="settings">
-
+  <ion-list>
+    <ion-item (tap)="goToNews()">
+      <!--<ion-icon name="pulse" item-left></ion-icon>-->
+        News
+      <ion-icon name="arrow-forward" item-right></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-label>Language</ion-label>
+      <ion-select (change)="langChange($event)" [(ngModel)]="lang">
+        <ion-option value="english" checked="true">English</ion-option>
+        <ion-option value="french">French</ion-option>
+        <ion-option value="spanish">Spanish</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
 </ion-content>
+<!--(click)="goToNews()" [navPush]="pushPageNews" [navParams]="{}"-->

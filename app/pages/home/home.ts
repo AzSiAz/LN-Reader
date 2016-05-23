@@ -26,15 +26,7 @@ export class Home {
 			this.items = data;
   		});
   	}
-	
-	test() {
-		alert("test");
-	}
-
-	addFav(item) {
-  		alert(JSON.stringify(item));
-  	}
-	
+		
 	// onCancel(event) {
 	// 	console.log(event);
 	// 	this.isHidden = true;

@@ -54,6 +54,10 @@ export class SqlManager {
     alert("Updating DB");
   }
   
+  static setLang(lang) {
+    SqlManager.storage.set('lang', lang);
+  }
+  
   static getLang() {
     return SqlManager.storage.get('lang').then(lang => {
       return (lang != undefined) ? lang : "english";

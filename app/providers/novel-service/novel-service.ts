@@ -18,6 +18,26 @@ export class NovelService {
 	constructor(http: Http) {
 		this.http = http;
 	}
+	
+	getLnLang() {
+		return new Promise(resolve => {
+			this.http.get(`https://api.azsiaz.tech/list/types`)
+			.map(res => res.json())
+			.subscribe(data => {
+				resolve(data[0].language);
+			});
+		})
+	}
+	
+	getNews() {
+		return new Promise(resolve => {
+			this.http.get(`https://api.azsiaz.tech/news`)
+			.map(res => res.json())
+			.subscribe(data => {
+				resolve(data);
+			});
+		})
+	}
 
 	addFavorite(json) {
 		
