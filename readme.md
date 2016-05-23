@@ -7,3 +7,4 @@
 ## Working On
     - Favorites
     - Settings
+    - get novel list by lang and handle web novel and teaser
