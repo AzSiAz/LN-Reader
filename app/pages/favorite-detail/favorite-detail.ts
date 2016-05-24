@@ -28,10 +28,10 @@ export class FavoriteDetailPage {
   
   init() {
     let toast = Toast.create({
-			message: `Loading ${this.data}`
+			message: `Loading ${this.data.title}`
 		});
     this.nav.present(toast);
-    this.novelservice.getFavDetail(this.data).then(data => {
+    this.novelservice.getFavDetail(this.data.title).then(data => {
       this.novel = data;
       toast.dismiss();
     })
@@ -68,5 +68,9 @@ export class FavoriteDetailPage {
   
   openChapter(item) {
     this.nav.push(NovelChapterPage, item);
+  }
+  
+  removeFav() {
+    alert("Remove");
   }
 }

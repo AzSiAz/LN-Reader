@@ -1,10 +1,10 @@
 <ion-navbar *navbar>
-  <ion-title>{{data}}</ion-title>
+  <ion-title>{{data.title}}</ion-title>
   <ion-buttons end>
-    <button (tap)="addFav()">
+    <button (tap)="removeFav()">
       <ion-icon name="trash"></ion-icon>
     </button>
-    <button (tap)="openInBrowser(data)">
+    <button (tap)="openInBrowser(data.title)">
       <ion-icon name="open"></ion-icon>
     </button>
   </ion-buttons>
@@ -16,7 +16,6 @@
   <span>{{novel.status}}</span>
   <h5 [hidden]="!novel.updateDate">Update date : </h5>
   <span>{{novel.updateDate}}</span>
-  <!--<ion-datetime displayFormat="DDDD MMMM, YYYY HH:mm" [ngModel]="novel.updateDate"></ion-datetime>-->
 
   <h5 [hidden]="!novel.author">Author : </h5>
   <span>{{novel.author}}</span>

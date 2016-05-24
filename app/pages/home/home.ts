@@ -77,8 +77,6 @@ export class Home {
 	}
 	
 	goToDetail(item) {
-		// this.params = item;
-		// this.pushPage = NovelDetailPage;
 		this.nav.push(NovelDetailPage, item);
 	}
 }
