@@ -19,15 +19,15 @@ export class NovelService {
 		this.http = http;
 	}
 	
-	getLnLang() {
-		return new Promise(resolve => {
-			this.http.get(`https://api.azsiaz.tech/list/types`)
-			.map(res => res.json())
-			.subscribe(data => {
-				resolve(data[0].language);
-			});
-		})
-	}
+	// getLnLang() {
+	// 	return new Promise(resolve => {
+	// 		this.http.get(`https://api.azsiaz.tech/list/types`)
+	// 		.map(res => res.json())
+	// 		.subscribe(data => {
+	// 			resolve(data[0].language);
+	// 		});
+	// 	})
+	// }
 	
 	getNews() {
 		return new Promise(resolve => {
@@ -80,9 +80,11 @@ export class NovelService {
 	}
 
 	getFavList() {
-		return SqlManager.getFavList().then(data => {
-			return data;
-		})
+		return SqlManager.getFavList();
+	}
+	
+	getFavDetail(title) {
+		return SqlManager.getFavNovel(title);
 	}
 	
 	getChapter(chapter) {

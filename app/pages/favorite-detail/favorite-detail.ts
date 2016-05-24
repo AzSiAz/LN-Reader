@@ -9,7 +9,7 @@ import {Events} from 'ionic-angular';
   providers: [NovelService]
 })
 
-export class NovelDetailPage {
+export class FavoriteDetailPage {
   
   param: any;
   pushPage: any;
@@ -28,10 +28,10 @@ export class NovelDetailPage {
   
   init() {
     let toast = Toast.create({
-			message: `Loading ${this.data.title}`
+			message: `Loading ${this.data}`
 		});
     this.nav.present(toast);
-    this.novelservice.getNovelDetail(this.data.page).then(data => {
+    this.novelservice.getFavDetail(this.data).then(data => {
       this.novel = data;
       toast.dismiss();
     })
@@ -64,31 +64,6 @@ export class NovelDetailPage {
   openInBrowser(item) {
     name = item.title.replace(/ /g, "_");
     cordova.InAppBrowser.open(`https://www.baka-tsuki.org/project/index.php?title=${name}`, "_system", '')
-  }
-  
-  addFav() {
-    let toast = Toast.create({
-			message: `Adding ${this.data.title} to favorite`
-		});
-    this.nav.present(toast);
-    this.novelservice.addFavorite(this.novel).then(a => {
-      toast.dismiss();
-      this.nav.present(
-        Toast.create({
-          message: `${this.data.title} added`,
-          duration: 1000
-        })
-      );
-      this.events.publish('fav:added'); 
-    }, e => {
-      toast.dismiss();
-      this.nav.present(
-          Toast.create({
-            message: `${this.data.title} already added`,
-            duration: 1000
-          })
-        );
-    })
   }
   
   openChapter(item) {

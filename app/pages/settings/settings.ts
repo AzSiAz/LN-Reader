@@ -15,9 +15,9 @@ export class Settings {
   constructor(private nav: NavController, private novelservice: NovelService) {}
   
   ngOnInit() {
-    this.novelservice.getLnLang().then(data => {
-      this.lang = data;
-    })
+    // this.novelservice.getLnLang().then(data => {
+    //   this.lang = data;
+    // })
   }
   
   langChange(event) {

@@ -53,7 +53,7 @@ export class SqlManager {
     );`);
     SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "favorites" (
       "id"	INTEGER PRIMARY KEY AUTOINCREMENT,
-      "title"	TEXT,
+      "title"	TEXT UNIQUE,
       "updateDate"	TEXT,
       "cover"	TEXT,
       "synopsis"	TEXT,
@@ -85,15 +85,15 @@ export class SqlManager {
     if (refresh == false) {
       for (let item of json.titles) {
         SqlManager.storage.query(`INSERT INTO "novel_list" (page, title, lastreviseddate, lastrevisedid, pageid) 
-          values (?, ?, ?, ?, ?)`, [item.page, item.title, item.lastreviseddate, item.lastrevisedid, item.pageid])
+          values (?, ?, ?, ?, ?);`, [item.page, item.title, item.lastreviseddate, item.lastrevisedid, item.pageid])
       }
     }
     else {
-      SqlManager.storage.query('DELETE FROM "novel_list"').then(res => {
-        SqlManager.storage.query('UPDATE sqlite_sequence SET seq=0 WHERE name="novel_list"').then(res => {
+      SqlManager.storage.query('DELETE FROM "novel_list";').then(res => {
+        SqlManager.storage.query('UPDATE sqlite_sequence SET seq=0 WHERE name="novel_list";').then(res => {
           for (let item of json.titles) {
             SqlManager.storage.query(`INSERT INTO novel_list (page, title, lastreviseddate, lastrevisedid, pageid) 
-              values (?, ?, ?, ?, ?)`, [item.page, item.title, item.lastreviseddate, item.lastrevisedid, item.pageid])
+              values (?, ?, ?, ?, ?);`, [item.page, item.title, item.lastreviseddate, item.lastrevisedid, item.pageid])
           }
         }, e => {
           console.error(e);
@@ -104,7 +104,7 @@ export class SqlManager {
   
   static getCacheNovelList(refresh = false) {
     if (refresh == false) {
-      return SqlManager.storage.query('SELECT * FROM "novel_list"').then((data) => {
+      return SqlManager.storage.query('SELECT * FROM "novel_list";').then((data) => {
           if(data.res.rows.length > 0) {
             let list = [];
             for(var i = 0; i < data.res.rows.length; i++) {
@@ -142,32 +142,40 @@ export class SqlManager {
   }
   
   static setFavNovel(item) {
-    // TODO
-    // SELECT COUNT(*) FROM favorites WHERE "title" = ?
-    // Check Fav
-    return SqlManager.storage.query(`SELECT COUNT(*) FROM favorites WHERE "title" = ?`, [item.title]).then(res => {
-      if(res.res.rows[0]['COUNT(*)'] != 0) {
-        return false;
-      }
-      else {
+    // return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?;`, [item.title]).then(data => {
+    //   alert(JSON.stringify(data));
+    //   if(true) {
+    //     return false;
+    //   }
+    //   else {
         return SqlManager.storage.query(`INSERT INTO "favorites"
           (title, updateDate, cover, synopsis, one_off, status, author, illustrator, categories, tome) 
-          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
           [item.title, item.updateDate, item.cover, item.synopsis, item.one_off, item.status, 
           item.author, item.illustrator, JSON.stringify(item.categories), JSON.stringify(item.tome)])
-      }
-    })
-    
+      // }
+    // }) 
   }
   
   static getFavNovel(title) {
-    return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?`, [title]).then(data => {
-      console.log(data);
+    return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?;`, [title]).then(data => {
+      return {
+        title: data.res.rows[0].title,
+        updateDate: data.res.rows[0].updateDate,
+        cover: data.res.rows[0].cover,
+        synopsis: data.res.rows[0].synopsis,
+        one_off: data.res.rows[0].one_off,
+        status: data.res.rows[0].status,
+        author: data.res.rows[0].author,
+        illustrator: data.res.rows[0].illustrator,
+        categories: JSON.parse(data.res.rows[0].categories),
+        tome: JSON.parse(data.res.rows[0].tome),
+      }
     })
   }
   
   static getFavList() {
-    return SqlManager.storage.query('SELECT title, cover FROM "favorites" ORDER BY title').then((data) => {
+    return SqlManager.storage.query('SELECT title, cover FROM "favorites" ORDER BY title;').then((data) => {
       if(data.res.rows.length > 0) {
         let list = [];
         for(var i = 0; i < data.res.rows.length; i++) {
