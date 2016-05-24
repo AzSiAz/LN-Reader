@@ -39,14 +39,18 @@ export class SqlManager {
       "lastrevisedid"	TEXT,
       "pageid"	INTEGER
     );`);
-    SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "favorite" (
+    SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "favorites" (
       "id"	INTEGER PRIMARY KEY AUTOINCREMENT,
-      "name"	TEXT,
-      "page"	TEXT,
+      "title"	TEXT,
+      "updateDate"	TEXT,
       "cover"	TEXT,
-      "lastreviseddate"	TEXT,
-      "lastrevisedid"	TEXT,
-      "pageid"	INTEGER
+      "synopsis"	TEXT,
+      "one_off"	TEXT,
+      "status"	TEXT,
+      "author"	TEXT,
+      "illustrator"	TEXT,
+      "categories"	TEXT,
+      "tome"	TEXT
     );`);
   }
   
@@ -125,12 +129,34 @@ export class SqlManager {
     SqlManager.storage.set('cache_' + json.title.replace(/ /g, "_"), JSON.stringify(json));
   }
   
-  static setFavNovel() {
-    
+  static setFavNovel(item) {
+    return SqlManager.storage.query(`INSERT INTO "favorites"
+      (title, updateDate, cover, synopsis, one_off, status, author, illustrator, categories, tome) 
+      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [item.title, item.updateDate, item.cover, item.synopsis, item.one_off, item.status, 
+      item.author, item.illustrator, JSON.stringify(item.categories), JSON.stringify(item.tome)])
   }
   
-  static getFavNovel() {
-    
+  static getFavNovel(title) {
+    return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?`, [title]).then(data => {
+      console.log(data);
+    })
+  }
+  
+  static getFavList() {
+    return SqlManager.storage.query('SELECT title, cover FROM "favorites" ORDER BY title').then((data) => {
+      if(data.res.rows.length > 0) {
+        let list = [];
+        for(var i = 0; i < data.res.rows.length; i++) {
+            list.push({title: data.res.rows.item(i).title,
+              cover: data.res.rows.item(i).cover});
+        }
+        return list;
+      }
+      return [];
+    }, (error) => {
+      console.log("ERROR -> " + JSON.stringify(error.err));
+    });
   }
 }
 

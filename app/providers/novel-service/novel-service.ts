@@ -40,7 +40,7 @@ export class NovelService {
 	}
 
 	addFavorite(json) {
-		
+		return SqlManager.setFavNovel(json);
 	}
   
 	getNovelDetail(title) {
@@ -79,8 +79,10 @@ export class NovelService {
 		})
 	}
 
-	getFavNovel() {
-	
+	getFavList() {
+		return SqlManager.getFavList().then(data => {
+			return data;
+		})
 	}
 	
 	getChapter(chapter) {
