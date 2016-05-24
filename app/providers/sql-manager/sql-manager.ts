@@ -124,17 +124,24 @@ export class SqlManager {
     }
   }
 
-  static getCacheNovel(name) {
-    return SqlManager.storage.get('cache_' + name).then(data => {
-      try {
-        data = JSON.parse(data);
-        if (data.code) throw Error;
-        return data;
-      }
-      catch (e) {
+  static getCacheNovel(name, refresh = false) {
+    if (refresh == false) {
+      return SqlManager.storage.get('cache_' + name).then(data => {
+        try {
+          data = JSON.parse(data);
+          if (data.code) throw Error;
+          return data;
+        }
+        catch (e) {
+          return false;
+        }
+      });
+    }
+    else {
+      return SqlManager.storage.remove('cache_' + name).then(() => {
         return false;
-      }
-    })
+      });
+    }
   }
 
   static setCacheNovel(json) {

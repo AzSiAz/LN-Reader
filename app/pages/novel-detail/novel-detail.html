@@ -11,6 +11,16 @@
 </ion-navbar>
 
 <ion-content padding>
+  <ion-refresher (refresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing..."
+    >
+    </ion-refresher-content>
+  </ion-refresher>
+  
   <center><img [hidden]="!novel.cover" src="{{novel.cover}}"></center>
   <h5 [hidden]="!novel.status">Status : </h5>
   <span>{{novel.status}}</span>

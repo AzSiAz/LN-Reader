@@ -27,12 +27,24 @@ export class FavoriteDetailPage {
     this.init();
   }
   
-  init() {
+  doRefresh(event) {
+    let toast = Toast.create({
+			message: `Refreshing ${this.data}`
+		});
+		this.nav.present(toast);
+		this.novelservice.getFavDetail(this.data, true).then(data => {
+      this.novel = data;
+			toast.dismiss();
+			event.complete();
+    });
+  }
+  
+  init(refresh = false) {
     let toast = Toast.create({
 			message: `Loading ${this.data}`
 		});
     this.nav.present(toast);
-    this.novelservice.getFavDetail(this.data).then(data => {
+    this.novelservice.getFavDetail(this.data, refresh).then(data => {
       this.novel = data;
       toast.dismiss();
     })

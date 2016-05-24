@@ -36,6 +36,13 @@ export class NovelDetailPage {
       toast.dismiss();
     })
   }
+  
+  doRefresh(event) {
+		this.novelservice.getNovelDetail(this.data.page, true).then(data => {
+      this.novel = data;
+			event.complete();
+    });
+  }
 
   setClass(cover) {
     var css = null;

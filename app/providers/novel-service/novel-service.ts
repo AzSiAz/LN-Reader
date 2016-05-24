@@ -43,9 +43,9 @@ export class NovelService {
 		return SqlManager.setFavNovel(json);
 	}
   
-	getNovelDetail(title) {
+	getNovelDetail(title, refresh = false) {
 		return new Promise(resolve => {
-			return SqlManager.getCacheNovel(title).then(data => {
+			return SqlManager.getCacheNovel(title, refresh).then(data => {
 				if (typeof data === "object") {
 					resolve(data);
 				}
@@ -83,8 +83,24 @@ export class NovelService {
 		return SqlManager.getFavList();
 	}
 	
-	getFavDetail(title) {
-		return SqlManager.getFavNovel(title);
+	getFavDetail(title, refresh = false) {
+		return new Promise(resolve => {
+			if (refresh) {
+				this.http.get(`https://api.azsiaz.tech/title/query/?title=${title.replace(/ /g, "_")}`)
+				.map(res => res.json())
+				.subscribe(data => {
+					console.log(data);
+					return SqlManager.removeFavNovel(title).then(() => {
+						return SqlManager.setFavNovel(data)
+					}).then(res => {
+						resolve(data);
+					})
+				});
+			}
+			return SqlManager.getFavNovel(title).then(data => {
+				resolve(data);
+			})
+		})
 	}
 	
 	getChapter(chapter) {
