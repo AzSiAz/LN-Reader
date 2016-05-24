@@ -12,23 +12,35 @@ export class SqlManager {
   
   static storage: Storage
   
-    static init() {
-      return new Promise(resolve => {
-          SqlManager.storage = new Storage(SqlStorage);
-          return SqlManager.storage.get('db').then(version => {
-              SqlManager.storage.set('db', 'v1');
-              SqlManager.storage.set('lang', 'english');
-              SqlManager.FirstInit();
-              resolve();
-              // if (version == undefined) {
-              // }
-              // else {
-              //     SqlManager.updateDB();
-              //     return;
-              // }
-          })
+  static init() {
+    return new Promise(resolve => {
+      SqlManager.storage = new Storage(SqlStorage);
+      // return SqlManager.clearDB().then(e => {
+        return SqlManager.storage.get('db').then(version => {
+          SqlManager.storage.set('db', 'v1');
+          SqlManager.storage.set('lang', 'english');
+          SqlManager.FirstInit();
+          resolve();
+          // if (version == undefined) {
+          // }
+          // else {
+          //     SqlManager.updateDB();
+          //     return;
+          // }
         })
-    }
+      // })
+    })
+  }
+  
+  static clearDB() {
+    let promise = []
+    SqlManager.storage.clear();
+    promise.push(SqlManager.storage.query(`DELETE FROM "novel_list"`));
+    promise.push(SqlManager.storage.query(`DELETE FROM "favorites"`));
+    promise.push(SqlManager.storage.query('UPDATE sqlite_sequence SET seq=0 WHERE name="novel_list"'));
+    promise.push(SqlManager.storage.query('UPDATE sqlite_sequence SET seq=0 WHERE name="favorites"'));
+    return Promise.all(promise);
+  }
   
   static FirstInit() {
     SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "novel_list" (
@@ -130,11 +142,22 @@ export class SqlManager {
   }
   
   static setFavNovel(item) {
-    return SqlManager.storage.query(`INSERT INTO "favorites"
-      (title, updateDate, cover, synopsis, one_off, status, author, illustrator, categories, tome) 
-      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [item.title, item.updateDate, item.cover, item.synopsis, item.one_off, item.status, 
-      item.author, item.illustrator, JSON.stringify(item.categories), JSON.stringify(item.tome)])
+    // TODO
+    // SELECT COUNT(*) FROM favorites WHERE "title" = ?
+    // Check Fav
+    return SqlManager.storage.query(`SELECT COUNT(*) FROM favorites WHERE "title" = ?`, [item.title]).then(res => {
+      if(res.res.rows[0]['COUNT(*)'] != 0) {
+        return false;
+      }
+      else {
+        return SqlManager.storage.query(`INSERT INTO "favorites"
+          (title, updateDate, cover, synopsis, one_off, status, author, illustrator, categories, tome) 
+          values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [item.title, item.updateDate, item.cover, item.synopsis, item.one_off, item.status, 
+          item.author, item.illustrator, JSON.stringify(item.categories), JSON.stringify(item.tome)])
+      }
+    })
+    
   }
   
   static getFavNovel(title) {
