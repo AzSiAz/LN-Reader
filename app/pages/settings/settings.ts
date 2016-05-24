@@ -21,7 +21,7 @@ export class Settings {
   }
   
   langChange(event) {
-    SqlManager.setLang(this.lang);
+    // SqlManager.setLang(this.lang);
   }
   
   goToNews() {
