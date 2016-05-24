@@ -174,6 +174,10 @@ export class SqlManager {
     })
   }
   
+  static removeFavNovel(title) {
+    return SqlManager.storage.query(`DELETE FROM "favorites" WHERE title = ?;`, [title]);
+  }
+  
   static getFavList() {
     return SqlManager.storage.query('SELECT title, cover FROM "favorites" ORDER BY title;').then((data) => {
       if(data.res.rows.length > 0) {

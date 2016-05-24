@@ -95,5 +95,9 @@ export class NovelService {
 			});
 		})
 	}
+	
+	removeFav(title) {
+		return SqlManager.removeFavNovel(title);
+	}
 }
 

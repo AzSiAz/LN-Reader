@@ -18,6 +18,9 @@ export class Favorites {
         this.events.subscribe('fav:added', () => {
             this.init();
         });
+        this.events.subscribe('fav:removed', () => {
+            this.init();
+        });
     }
     
     ngOnInit() {

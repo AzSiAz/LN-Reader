@@ -1,6 +1,7 @@
-import {Page, Nav, NavParams, Toast} from 'ionic-angular';
+import {Page, Nav, NavParams, Toast, NavController} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
+import {Favorites} from '../favorites/favorites';
 import {Events} from 'ionic-angular';
 
 
@@ -17,7 +18,7 @@ export class FavoriteDetailPage {
   data: any;
   shownGroup: any;
   
-  constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
+  constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
     this.novel = {};
     this.data = this.params.data;
   }
@@ -71,6 +72,13 @@ export class FavoriteDetailPage {
   }
   
   removeFav() {
-    alert("Remove");
+    this.novelservice.removeFav(this.data).then(a => {
+      this.nav.present(Toast.create({
+        message: `${this.data} removed`,
+        duration: 1000
+      }));
+      this.events.publish('fav:removed');
+      this.navcontroller.popToRoot();
+    })
   }
 }
