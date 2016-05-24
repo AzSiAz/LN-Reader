@@ -20,7 +20,7 @@
       <ion-note item-left>
         {{item.date}}
       </ion-note>
-      <button primary clear item-right (tap)="openInBrowser(item.link)">
+      <button [hidden]="!item.link" primary clear item-right (tap)="openInBrowser(item.link)">
         <ion-icon name="link"></ion-icon>
         <div>Link</div>
       </button>
