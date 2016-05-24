@@ -12,9 +12,7 @@ export class Settings {
   
   lang: any;
   
-  constructor(private nav: NavController, private novelservice: NovelService) {
-    // this.pushPageNews = SettingsNewsPage;
-  }
+  constructor(private nav: NavController, private novelservice: NovelService) {}
   
   ngOnInit() {
     this.novelservice.getLnLang().then(data => {
@@ -27,7 +25,6 @@ export class Settings {
   }
   
   goToNews() {
-    // this.pushPage = SettingsNewsPage;
     this.nav.push(SettingsNewsPage);
   }
 }

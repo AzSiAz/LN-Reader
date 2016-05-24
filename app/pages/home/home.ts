@@ -1,4 +1,4 @@
-import {Page, Nav} from 'ionic-angular';
+import {Page, NavController, Toast} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelDetailPage} from '../novel-detail/novel-detail';
 
@@ -8,7 +8,7 @@ import {NovelDetailPage} from '../novel-detail/novel-detail';
 })
 
 export class Home {
-  
+
 	items: any;
 	pushPage: any;
 	params: any;
@@ -17,13 +17,16 @@ export class Home {
 	save: any;
 	myInput: string;
 	
-	constructor(private novelservice: NovelService, private nav: Nav) {
-		this.pushPage = NovelDetailPage;
-	}
+	constructor(private novelservice: NovelService, private nav: NavController) {}
 	
-	ngOnInit() {
+	onPageLoaded() {
+		let toast = Toast.create({
+			message: 'Loading List'
+		});
+		this.nav.present(toast);
   		this.novelservice.getNovelList(false).then(data => {
 			this.items = data;
+			toast.dismiss();
   		});
   	}
 		
@@ -45,8 +48,13 @@ export class Home {
 	}
 	
 	doRefresh(event) {
+		let toast = Toast.create({
+			message: 'Refreshing List'
+		});
+		this.nav.present(toast);
 		this.novelservice.getNovelList(true).then(data => {
   			this.items = data;
+			toast.dismiss();
 			event.complete();
   		});
 	}
@@ -66,5 +74,11 @@ export class Home {
 		}
 			return false;
 		})
+	}
+	
+	goToDetail(item) {
+		// this.params = item;
+		// this.pushPage = NovelDetailPage;
+		this.nav.push(NovelDetailPage, item);
 	}
 }

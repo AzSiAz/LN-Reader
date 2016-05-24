@@ -1,4 +1,4 @@
-import {Page, NavController, NavParams} from 'ionic-angular';
+import {Page, NavController, NavParams, Toast} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 
 @Page({
@@ -14,14 +14,18 @@ export class NovelChapterPage {
   
     constructor(private nav: NavController, private params:NavParams, private novelservice:NovelService) {
         this.chapter = '';
-        this.data = this.params.get('data');
-        console.log(this.data);
+        this.data = this.params.data;
     }
   
-    ngOnInit() {
+    onPageLoaded() {
+        let toast = Toast.create({
+			message: `Loading ${this.data.title}`
+		});
+        this.nav.present(toast);
         if (this.data.linktype == "internal") {
             this.novelservice.getChapter(this.data.page).then(data => {
                 this.chapter = data;
+                toast.dismiss();
             })
         }
     }

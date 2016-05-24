@@ -7,6 +7,7 @@ import {SqlManager} from './providers/sql-manager/sql-manager'
 	template: '<ion-nav [root]="rootPage"></ion-nav>',
 	config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
+
 export class MyApp {
 	rootPage: any;
 

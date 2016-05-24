@@ -1,4 +1,4 @@
-import {Page} from 'ionic-angular';
+import {Page, NavController} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {Events} from 'ionic-angular';
 
@@ -12,8 +12,7 @@ export class Favorites {
     items: any;
     pushPage: any;
     
-    constructor(private NovelService: NovelService, private events: Events) {
-        // this.pushPage = 
+    constructor(private NovelService: NovelService, private events: Events, private nav: NavController) {
         this.events.subscribe('fav:added', (user) => {
             this.init();
         });
@@ -27,5 +26,9 @@ export class Favorites {
         this.NovelService.getFavList().then(data => {
             this.items = data;
         })
+    }
+    
+    goToDetail(item) {
+        // this.nav.push(NovelDetailPage, item);
     }
 }
