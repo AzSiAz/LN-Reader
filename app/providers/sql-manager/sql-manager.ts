@@ -160,16 +160,16 @@ export class SqlManager {
   static getFavNovel(title) {
     return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?;`, [title]).then(data => {
       return {
-        title: data.res.rows[0].title,
-        updateDate: data.res.rows[0].updateDate,
-        cover: data.res.rows[0].cover,
-        synopsis: data.res.rows[0].synopsis,
-        one_off: data.res.rows[0].one_off,
-        status: data.res.rows[0].status,
-        author: data.res.rows[0].author,
-        illustrator: data.res.rows[0].illustrator,
-        categories: JSON.parse(data.res.rows[0].categories),
-        tome: JSON.parse(data.res.rows[0].tome),
+        title: data.res.rows.item(0).title,
+        updateDate: data.res.rows.item(0).updateDate,
+        cover: data.res.rows.item(0).cover,
+        synopsis: data.res.rows.item(0).synopsis,
+        one_off: data.res.rows.item(0).one_off,
+        status: data.res.rows.item(0).status,
+        author: data.res.rows.item(0).author,
+        illustrator: data.res.rows.item(0).illustrator,
+        categories: JSON.parse(data.res.rows.item(0).categories),
+        tome: JSON.parse(data.res.rows.item(0).tome),
       }
     })
   }

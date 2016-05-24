@@ -38,12 +38,7 @@
     "onesignal-cordova-plugin"
   ],
   "cordovaPlatforms": [
-    "ios",
-    {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
-    }
+    "ios"
   ],
   "name": "ln-reader",
   "description": "LN-Reader"
