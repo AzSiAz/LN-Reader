@@ -5,7 +5,7 @@ import {Events} from 'ionic-angular';
 
 
 @Page({
-  templateUrl: 'build/pages/novel-detail/novel-detail.html',
+  templateUrl: 'build/pages/favorite-detail/favorite-detail.html',
   providers: [NovelService]
 })
 
@@ -28,10 +28,10 @@ export class FavoriteDetailPage {
   
   init() {
     let toast = Toast.create({
-			message: `Loading ${this.data.title}`
+			message: `Loading ${this.data}`
 		});
     this.nav.present(toast);
-    this.novelservice.getFavDetail(this.data.title).then(data => {
+    this.novelservice.getFavDetail(this.data).then(data => {
       this.novel = data;
       toast.dismiss();
     })

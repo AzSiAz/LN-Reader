@@ -31,6 +31,6 @@ export class Favorites {
     }
     
     goToDetail(item) {
-        this.nav.push(FavoriteDetailPage, item);
+        this.nav.push(FavoriteDetailPage, item.title);
     }
 }

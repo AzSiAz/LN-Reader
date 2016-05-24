@@ -1,10 +1,10 @@
 <ion-navbar *navbar>
-  <ion-title>{{data.title}}</ion-title>
+  <ion-title>{{data}}</ion-title>
   <ion-buttons end>
     <button (tap)="removeFav()">
       <ion-icon name="trash"></ion-icon>
     </button>
-    <button (tap)="openInBrowser(data.title)">
+    <button (tap)="openInBrowser(data)">
       <ion-icon name="open"></ion-icon>
     </button>
   </ion-buttons>
@@ -40,4 +40,3 @@
     </ion-list>
   </span>
 </ion-content>
-<!--[navPush]="pushPage" [navParams]="{data: item}"-->
