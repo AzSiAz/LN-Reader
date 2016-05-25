@@ -61,19 +61,23 @@ export class Home {
 	
 	onInput(searchbar) {
 		
-		var q = searchbar.value;
-		
-		if (q.trim() == '') {
-			this.items = this.save;
-			return;
-		}
-		
-		this.items = this.items.filter((v) => {
-		if (v.title.toLowerCase().indexOf(q.toLowerCase()) > -1) {
-			return true;
-		}
-			return false;
-		})
+		this.novelservice.getNovelList(false).then(data => {
+			this.items = data;
+					
+			var q = searchbar.value;
+			
+			if (q.trim() == '') {
+				this.items = this.save;
+				return;
+			}
+			
+			this.items = this.items.filter((v) => {
+			if (v.title.toLowerCase().indexOf(q.toLowerCase()) > -1) {
+				return true;
+			}
+				return false;
+			})
+  		});
 	}
 	
 	goToDetail(item) {
