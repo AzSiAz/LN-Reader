@@ -1,14 +1,16 @@
-<ion-navbar *navbar>
-  <ion-title>{{data.title}}</ion-title>
-  <ion-buttons end>
-    <button (tap)="addFav()">
-      <ion-icon name="star"></ion-icon>
-    </button>
-    <button (tap)="openInBrowser(data)">
-      <ion-icon name="open"></ion-icon>
-    </button>
-  </ion-buttons>
-</ion-navbar>
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{data.title}}</ion-title>
+    <ion-buttons end>
+      <button (tap)="addFav()">
+        <ion-icon name="star"></ion-icon>
+      </button>
+      <button (tap)="openInBrowser(data)">
+        <ion-icon name="open"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
 <ion-content padding>
   <ion-refresher (refresh)="doRefresh($event)">

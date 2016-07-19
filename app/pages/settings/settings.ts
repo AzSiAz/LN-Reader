@@ -1,9 +1,10 @@
-import {Page, NavController} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
 import {SettingsNewsPage} from '../settings-news/settings-news';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {SqlManager} from '../../providers/sql-manager/sql-manager.ts';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/settings/settings.html',
   providers: [NovelService]
 })
@@ -14,7 +15,7 @@ export class Settings {
   
   constructor(private nav: NavController, private novelservice: NovelService) {}
   
-  ngOnInit() {
+  ionViewLoaded() {
     // this.novelservice.getLnLang().then(data => {
     //   this.lang = data;
     // })

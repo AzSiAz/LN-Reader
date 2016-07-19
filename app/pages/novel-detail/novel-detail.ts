@@ -1,10 +1,11 @@
-import {Page, Nav, NavParams, Toast} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {Nav, NavParams, Toast} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Events} from 'ionic-angular';
 
 
-@Page({
+@Component({
   templateUrl: 'build/pages/novel-detail/novel-detail.html',
   providers: [NovelService]
 })
@@ -22,7 +23,7 @@ export class NovelDetailPage {
     this.data = this.params.data;
   }
   
-  onPageLoaded() {
+  ionViewLoaded() {
     this.init();
   }
   

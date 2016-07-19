@@ -1,8 +1,9 @@
-import {Page, NavController, Toast} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, Toast} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelDetailPage} from '../novel-detail/novel-detail';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/home/home.html',
   providers: [NovelService]
 })
@@ -16,10 +17,10 @@ export class Home {
 	hideCancel: boolean = false;
 	save: any;
 	myInput: string;
-	
+
 	constructor(private novelservice: NovelService, private nav: NavController) {}
-	
-	onPageLoaded() {
+
+	ionViewLoaded() {
 		let toast = Toast.create({
 			message: 'Loading List'
 		});
@@ -28,15 +29,8 @@ export class Home {
 			this.items = data;
 			toast.dismiss();
   		});
-  	}
-		
-	// onCancel(event) {
-	// 	console.log(event);
-	// 	this.isHidden = true;
-	// 	this.items = this.save;
-	// 	this.save = {};
-	// }
-	
+	}
+
 	hideSearch() {
 		this.isHidden = !this.isHidden;
 		if (this.isHidden == false) this.save = this.items;
@@ -46,31 +40,31 @@ export class Home {
 			this.save = {};
 		}
 	}
-	
+
 	doRefresh(event) {
-		let toast = Toast.create({
-			message: 'Refreshing List'
-		});
-		this.nav.present(toast);
+		// let toast = Toast.create({
+		// 	message: 'Refreshing List'
+		// });
+		// this.nav.present(toast);
 		this.novelservice.getNovelList(true).then(data => {
   			this.items = data;
-			toast.dismiss();
+			// toast.dismiss();
 			event.complete();
   		});
 	}
-	
-	onInput(searchbar) {
-		
+
+	onInput(ev) {
+
 		this.novelservice.getNovelList(false).then(data => {
 			this.items = data;
-					
-			var q = searchbar.value;
-			
+
+			var q = ev.target.value;
+
 			if (q.trim() == '') {
 				this.items = this.save;
 				return;
 			}
-			
+
 			this.items = this.items.filter((v) => {
 			if (v.title.toLowerCase().indexOf(q.toLowerCase()) > -1) {
 				return true;
@@ -79,7 +73,7 @@ export class Home {
 			})
   		});
 	}
-	
+
 	goToDetail(item) {
 		this.nav.push(NovelDetailPage, item);
 	}

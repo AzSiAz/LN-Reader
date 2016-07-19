@@ -1,4 +1,5 @@
-import {Page, NavController, NavParams} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 
 /*
@@ -8,7 +9,7 @@ import {NovelService} from '../../providers/novel-service/novel-service';
   Ionic pages and navigation.
 */
 
-@Page({
+@Component({
   templateUrl: 'build/pages/settings-news/settings-news.html',
   providers: [NovelService]
 })
@@ -19,7 +20,7 @@ export class SettingsNewsPage {
   
   constructor(private nav: NavController, private novelservice: NovelService, private params: NavParams) {}
   
-  ngOnInit() {
+  ionViewLoaded() {
     this.novelservice.getNews().then(data => {
       this.data = data;
     })

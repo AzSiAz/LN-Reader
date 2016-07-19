@@ -1,7 +1,17 @@
-<ion-navbar *navbar>
-  <ion-title>{{data.title}}</ion-title>
-</ion-navbar>
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{data.title}}</ion-title>
+    <ion-buttons end>
+      <button (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
-<ion-content class="novel-chapter" padding>
-  <ion-scroll [innerHTML]="chapter" scrollY="true" scrollX="true"></ion-scroll>
+<ion-content fullscreen="true" #popoverContent class="novel-chapter popover-page" padding >
+  <div #popoverText class="text-to-change">
+    <div [innerHTML]="chapter"></div>
+  </div>
 </ion-content>
+<!--scrollY="true" scrollX="true" [ngClass]="setClass()"-->

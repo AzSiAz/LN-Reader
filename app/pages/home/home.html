@@ -1,32 +1,34 @@
-<ion-navbar *navbar>
-  <ion-title>Novel List</ion-title>
-  <ion-buttons end>
-    <button (tap)="hideSearch()">
-      <ion-icon name="search"></ion-icon>
-    </button>
-  </ion-buttons>
-</ion-navbar>
+<ion-header>
+  <ion-navbar>
+    <ion-title>Novel List</ion-title>
+    <ion-buttons end>
+      <button (tap)="hideSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 
 <ion-content class="home">
-  <ion-searchbar
-    [(ngModel)]="myInput"
-    (input)="onInput($event)"
-    [hideCancelButton]="hideCancel"
-    [hidden]="isHidden">
-  </ion-searchbar>
-  <ion-refresher (refresh)="doRefresh($event)">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingIcon="arrow-dropdown"
       pullingText="Pull to refresh"
       refreshingSpinner="circles"
-      refreshingText="Refreshing..."
+      refreshingText="Refreshing list..."
     >
     </ion-refresher-content>
   </ion-refresher>
+  <ion-searchbar
+    [(ngModel)]="myInput"
+    (ionInput)="onInput($event)"
+    [hideCancelButton]="hideCancel"
+    [hidden]="isHidden">
+  </ion-searchbar>
   <ion-list>
-    <ion-item text-wrap *ngFor="let item of items" (tap)="goToDetail(item)">
+    <ion-item detail-push text-wrap *ngFor="let item of items" (tap)="goToDetail(item)">
       {{item.title}}
-      <ion-icon name="arrow-forward" item-right></ion-icon>
+      <!--<ion-icon name="arrow-forward" item-right></ion-icon>-->
     </ion-item>
   </ion-list>
 </ion-content>

@@ -1,11 +1,12 @@
-import {Page, Nav, NavParams, Toast, NavController} from 'ionic-angular';
+import {Nav, NavParams, Toast, NavController} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Favorites} from '../favorites/favorites';
 import {Events} from 'ionic-angular';
 
 
-@Page({
+@Component({
   templateUrl: 'build/pages/favorite-detail/favorite-detail.html',
   providers: [NovelService]
 })
@@ -23,7 +24,7 @@ export class FavoriteDetailPage {
     this.data = this.params.data;
   }
   
-  onPageLoaded() {
+  ionViewLoaded() {
     this.init();
   }
   
