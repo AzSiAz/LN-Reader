@@ -9,9 +9,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content fullscreen="true" #popoverContent class="novel-chapter popover-page" padding >
-  <div #popoverText class="text-to-change">
-    <div [innerHTML]="chapter"></div>
-  </div>
+<ion-content id="parser_content" fullscreen="true" #popoverContent class="novel-chapter popover-page" padding >
+    <div #popoverText id="parser_text" class="text-to-change" [innerHTML]="chapter"></div>
 </ion-content>
 <!--scrollY="true" scrollX="true" [ngClass]="setClass()"-->

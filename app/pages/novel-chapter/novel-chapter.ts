@@ -1,16 +1,19 @@
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import {App, Popover, NavController, Content, NavParams, Toast} from 'ionic-angular';
+import {App, Popover, NavController, Content, NavParams, Toast, Platform, Storage, LocalStorage} from 'ionic-angular';
 
 @Component({
   template: `
     <ion-list radio-group [(ngModel)]="fontFamily" (ionChange)="changeFontFamily()" class="popover-page">
       <ion-row>
         <ion-col>
-          <button (click)="changeFontSize('smaller')" ion-item detail-none class="text-button text-smaller">A</button>
+          <button (click)="changeFontSize('small')" ion-item detail-none class="text-button text-smaller">A</button>
         </ion-col>
         <ion-col>
-          <button (click)="changeFontSize('larger')" ion-item detail-none class="text-button text-larger">A</button>
+          <button (click)="changeFontSize('medium')" ion-item detail-none class="text-button text-medium">A</button>
+        </ion-col>
+        <ion-col>
+          <button (click)="changeFontSize('large')" ion-item detail-none class="text-button text-larger">A</button>
         </ion-col>
       </ion-row>
       <ion-row class="row-dots">
@@ -27,6 +30,10 @@ import {App, Popover, NavController, Content, NavParams, Toast} from 'ionic-angu
           <button (click)="changeBackground('black')" category="dot" class="dot-black" [class.selected]="background == 'black'"></button>
         </ion-col>
       </ion-row>
+      <ion-item class="text-default">
+        <ion-label>{{default.name}}</ion-label>
+        <ion-radio value="{{default.value}}"></ion-radio>
+      </ion-item>
       <ion-item class="text-athelas">
         <ion-label>Athelas</ion-label>
         <ion-radio value="Athelas"></ion-radio>
@@ -63,6 +70,9 @@ class PopoverPage {
   contentEle: any;
   textEle: any;
   fontFamily;
+  default: any = {};
+  size: number;
+  local: Storage;
 
   colors = {
     'white': {
@@ -83,8 +93,10 @@ class PopoverPage {
     },
   };
 
-  constructor(private navParams: NavParams) {
-
+  constructor(private navParams: NavParams, private platform: Platform) {
+    let val = (this.platform.is("ios")) ? "Helvetica Neue" : "Roboto";
+    this.default.name = val;
+    this.default.value = val;
   }
 
   ngOnInit() {
@@ -93,7 +105,9 @@ class PopoverPage {
       this.textEle = this.navParams.data.textEle;
 
       this.background = this.getColorName(this.contentEle.style.backgroundColor);
+      this.changeBackground(JSON.parse(localStorage.getItem("color")))
       this.setFontFamily();
+      this.textEle.style.fontSize = localStorage.getItem("size");
     }
   }
 
@@ -107,28 +121,39 @@ class PopoverPage {
         colorName = key;
       }
     }
-
     return colorName;
   }
 
   setFontFamily() {
     if (this.textEle.style.fontFamily) {
       this.fontFamily = this.textEle.style.fontFamily.replace(/'/g, "");
+
     }
   }
 
   changeBackground(color) {
-    this.background = color;
-    this.contentEle.style.backgroundColor = this.colors[color].bg;
-    this.textEle.style.color = this.colors[color].fg;
+    // this.background = color;
+    if (typeof color == "object") {
+      this.contentEle.style.backgroundColor = color.bg;
+      this.textEle.style.color = color.fg;
+    }
+    else {
+      localStorage.setItem("color", JSON.stringify(this.colors[color]));
+      this.contentEle.style.backgroundColor = this.colors[color].bg;
+      this.textEle.style.color = this.colors[color].fg;
+    }
   }
 
   changeFontSize(direction) {
+    localStorage.setItem("size", direction);
     this.textEle.style.fontSize = direction;
   }
 
   changeFontFamily() {
-    if (this.fontFamily) this.textEle.style.fontFamily = this.fontFamily;
+    if(this.fontFamily) {
+      this.textEle.style.fontFamily = this.fontFamily;
+      localStorage.setItem("font", this.fontFamily);
+    }
   }
 }
 
@@ -147,19 +172,38 @@ export class NovelChapterPage {
   chapter: any;
   data: any;
   shownGroup: any;
-  prev1: any
-  prev2: any
+  prev1: any;
+  prev2: any;
   private scrollTop;
   private lastScrollTop = 0;
   public delta = 5;
 
-  constructor(private nav: NavController, private params:NavParams, private novelservice:NovelService) {
+  constructor(private nav: NavController, private params:NavParams, private novelservice:NovelService, private platform: Platform) {
       this.chapter = '';
       this.data = this.params.data;
+      if (!localStorage.getItem("size") && !localStorage.getItem("color") && !localStorage.getItem("font")) {
+        localStorage.setItem("size", "medium");
+        localStorage.setItem("font", (this.platform.is("ios")) ? "Helvetica Neue" : "Roboto");
+        localStorage.setItem("color", JSON.stringify(
+          {
+            'white': {
+              'bg': 'rgb(255, 255, 255)',
+              'fg': 'rgb(0, 0, 0)'
+            }
+          }
+        ));
+      }
   }
 
   ngAfterViewInit(){ 
-      this.content.addScrollListener(this.myScroll);
+      // this.content.addScrollListener(this.myScroll);
+      let text = document.getElementById("parser_text");
+      let content = document.getElementById("parser_content");
+      let color = JSON.parse(localStorage.getItem("color"));
+      text.style.fontFamily = localStorage.getItem("font");
+      text.style.fontSize = localStorage.getItem("size");
+      content.style.backgroundColor = color.bg;
+      content.style.color = color.fg;
   }
 
   myScroll(e) {
@@ -216,3 +260,13 @@ export class NovelChapterPage {
         });
   }
 }
+
+
+      // <ion-item class="text-roboto">
+      //   <ion-label>Roboto</ion-label>
+      //   <ion-radio value="Roboto"></ion-radio>
+      // </ion-item>
+      // <ion-item class="text-helvetica">
+      //   <ion-label>Helvetica Neue</ion-label>
+      //   <ion-radio value="Helvetica Neue"></ion-radio>
+      // </ion-item>
