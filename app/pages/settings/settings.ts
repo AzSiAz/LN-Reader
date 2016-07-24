@@ -38,15 +38,23 @@ export class Settings {
     switch (lang) {
         case "english":
           this.check1 = true;
+          this.check2 = false;
+          this.check3 = false;
           break;
         case "french":
+          this.check1 = false;
           this.check2 = true;
+          this.check3 = false;
           break;
         case "spanish" :
+          this.check1 = false;
+          this.check2 = false;
           this.check3 = true;
           break;
         default:
           this.check1 = true;
+          this.check2 = false;
+          this.check3 = false;
       }
   }
 
