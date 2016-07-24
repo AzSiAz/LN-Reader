@@ -22,7 +22,9 @@ export class Home {
 
 	ionViewLoaded() {
 		let toast = Toast.create({
-			message: 'Loading List'
+			message: 'Loading List',
+			showCloseButton: true,
+			dismissOnPageChange: true
 		});
 		this.nav.present(toast);
   		this.novelservice.getNovelList(false).then(data => {

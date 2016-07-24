@@ -29,7 +29,9 @@ export class NovelDetailPage {
   
   init() {
     let toast = Toast.create({
-			message: `Loading ${this.data.title}`
+			message: `Loading ${this.data.title}`,
+      showCloseButton: true,
+			dismissOnPageChange: true
 		});
     this.nav.present(toast);
     this.novelservice.getNovelDetail(this.data.page).then(data => {
@@ -76,7 +78,9 @@ export class NovelDetailPage {
   
   addFav() {
     let toast = Toast.create({
-			message: `Adding ${this.data.title} to favorite`
+			message: `Adding ${this.data.title} to favorite`,
+      showCloseButton: true,
+			dismissOnPageChange: true
 		});
     this.nav.present(toast);
     this.novelservice.addFavorite(this.novel).then(a => {
@@ -84,7 +88,9 @@ export class NovelDetailPage {
       this.nav.present(
         Toast.create({
           message: `${this.data.title} added`,
-          duration: 1000
+          duration: 1000,
+          showCloseButton: true,
+			    dismissOnPageChange: true
         })
       );
       this.events.publish('fav:added'); 
@@ -93,6 +99,8 @@ export class NovelDetailPage {
       this.nav.present(
           Toast.create({
             message: `${this.data.title} already added`,
+            showCloseButton: true,
+			      dismissOnPageChange: true,
             duration: 1000
           })
         );

@@ -30,7 +30,9 @@ export class FavoriteDetailPage {
   
   doRefresh(event) {
     let toast = Toast.create({
-			message: `Refreshing ${this.data}`
+			message: `Refreshing ${this.data}`,
+      showCloseButton: true,
+			dismissOnPageChange: true
 		});
 		this.nav.present(toast);
 		this.novelservice.getFavDetail(this.data, true).then(data => {
@@ -42,7 +44,9 @@ export class FavoriteDetailPage {
   
   init(refresh = false) {
     let toast = Toast.create({
-			message: `Loading ${this.data}`
+			message: `Loading ${this.data}`,
+      showCloseButton: true,
+			dismissOnPageChange: true
 		});
     this.nav.present(toast);
     this.novelservice.getFavDetail(this.data, refresh).then(data => {

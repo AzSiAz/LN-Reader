@@ -15,10 +15,10 @@
     </ion-item>
     <ion-item>
       <ion-label>Language</ion-label>
-      <ion-select (change)="langChange($event)" [(ngModel)]="lang">
-        <ion-option value="english" checked="true">English</ion-option>
-        <ion-option value="french">French</ion-option>
-        <ion-option value="spanish">Spanish</ion-option>
+      <ion-select (ionChange)="langChange($event)" [(ngModel)]="lang">
+        <ion-option value="english" checked="{{check1}}">English</ion-option>
+        <ion-option value="french" checked="{{check2}}">French</ion-option>
+        <ion-option value="spanish" checked="{{check3}}">Spanish</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>

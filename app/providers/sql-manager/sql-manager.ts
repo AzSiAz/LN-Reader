@@ -11,27 +11,30 @@ import {Storage, SqlStorage} from 'ionic-angular';
 export class SqlManager {
   
   static storage: Storage
-  
+  static lang;
+
   static init() {
     return new Promise(resolve => {
       SqlManager.storage = new Storage(SqlStorage);
       // return SqlManager.clearDB().then(e => {
         return SqlManager.storage.get('db').then(version => {
-          SqlManager.storage.set('db', 'v1');
-          SqlManager.storage.set('lang', 'english');
-          SqlManager.FirstInit();
-          resolve();
-          // if (version == undefined) {
-          // }
-          // else {
-          //     SqlManager.updateDB();
-          //     return;
-          // }
+          if(version == 'v1') {
+            return SqlManager.storage.get('lang').then(lang => {
+              SqlManager.lang = lang;
+              resolve();
+            })
+          }
+          else {
+            SqlManager.storage.set('db', 'v1');
+            SqlManager.storage.set('lang', 'english');
+            SqlManager.FirstInit();
+            resolve();
+          }
         })
       // })
     })
   }
-  
+
   static clearDB() {
     let promise = []
     SqlManager.storage.clear();
@@ -72,12 +75,13 @@ export class SqlManager {
   
   static setLang(lang) {
     SqlManager.storage.set('lang', lang);
+    SqlManager.lang = lang;
   }
-  
+
   static getLang() {
-    return SqlManager.storage.get('lang').then(lang => {
-      return (lang != undefined) ? lang : "english";
-    })
+    return (SqlManager.lang != undefined) ? SqlManager.lang : SqlManager.storage.get('lang').then(lang => {
+      return lang
+    });
   }
   
   static setCacheNovelList(json, refresh = false) {
@@ -114,13 +118,13 @@ export class SqlManager {
             }
             return list;
           }
-          return SqlManager.getLang();
+          return Promise.resolve(SqlManager.getLang());
       }, (error) => {
           console.log("ERROR -> " + JSON.stringify(error.err));
       });
     }
     else {
-      return SqlManager.getLang();
+      return Promise.resolve(SqlManager.getLang());
     }
   }
 

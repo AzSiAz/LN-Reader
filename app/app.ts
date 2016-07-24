@@ -15,15 +15,15 @@ export class MyApp {
 	constructor(platform: Platform) {
 		platform.ready().then(() => {
 
-			var notificationOpenedCallback = function(jsonData) {
-				console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
-			};
+			const notificationOpenedCallback = (jsonData) => console.log('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData))
 
-			window.plugins.OneSignal.init("74412a7f-ad29-4df9-a230-3891d0012435",
-				{googleProjectNumber: ""}, notificationOpenedCallback);
+			if (platform.is('cordova')) {
+				window.plugins.OneSignal.init("74412a7f-ad29-4df9-a230-3891d0012435",
+					{googleProjectNumber: ""}, notificationOpenedCallback);
 
 			// Show an alert box if a notification comes in when the user is in your app.
-			window.plugins.OneSignal.enableInAppAlertNotification(true);
+				window.plugins.OneSignal.enableInAppAlertNotification(true);
+			}
 
 			SqlManager.init().then(() => {
 				this.rootPage = TabsPage;
@@ -36,5 +36,5 @@ export class MyApp {
 }
 
 ionicBootstrap(MyApp, [], {
-  tabbarPlacement: 'bottom'
+//   tabbarPlacement: 'bottom'
 });
