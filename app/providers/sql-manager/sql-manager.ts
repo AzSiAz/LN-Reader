@@ -19,6 +19,7 @@ export class SqlManager {
       // return SqlManager.clearDB().then(e => {
         return SqlManager.storage.get('db').then(version => {
           if(version == 'v1') {
+            SqlManager.clearImpure();
             return SqlManager.storage.get('lang').then(lang => {
               SqlManager.lang = lang;
               resolve();
@@ -33,6 +34,10 @@ export class SqlManager {
         })
       // })
     })
+  }
+
+  static clearImpure() {
+    SqlManager.storage.query(`DELETE FROM "favorites" WHERE title IS NULL OR trim(title) = ''`);
   }
 
   static clearDB() {
@@ -170,6 +175,7 @@ export class SqlManager {
   
   static getFavNovel(title) {
     return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?;`, [title]).then(data => {
+      alert(JSON.stringify(data.res.rows.item(0)));
       return {
         title: data.res.rows.item(0).title,
         updateDate: data.res.rows.item(0).updateDate,
@@ -194,8 +200,8 @@ export class SqlManager {
       if(data.res.rows.length > 0) {
         let list = [];
         for(var i = 0; i < data.res.rows.length; i++) {
-            list.push({title: data.res.rows.item(i).title,
-              cover: data.res.rows.item(i).cover});
+          list.push({title: data.res.rows.item(i).title,
+                    cover: data.res.rows.item(i).cover});
         }
         return list;
       }
