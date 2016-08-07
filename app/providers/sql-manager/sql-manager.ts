@@ -158,19 +158,11 @@ export class SqlManager {
   }
   
   static setFavNovel(item) {
-    // return SqlManager.storage.query(`SELECT * FROM "favorites" WHERE title = ?;`, [item.title]).then(data => {
-    //   alert(JSON.stringify(data));
-    //   if(true) {
-    //     return false;
-    //   }
-    //   else {
         return SqlManager.storage.query(`INSERT INTO "favorites"
           (title, updateDate, cover, synopsis, one_off, status, author, illustrator, categories, tome) 
           values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
           [item.title, item.updateDate, item.cover, item.synopsis, item.one_off, item.status, 
           item.author, item.illustrator, JSON.stringify(item.categories), JSON.stringify(item.tome)])
-      // }
-    // }) 
   }
   
   static getFavNovel(title) {
