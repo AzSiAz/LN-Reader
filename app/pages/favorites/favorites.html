@@ -8,7 +8,7 @@
 
 <ion-content class="favorites">
   <ion-list>
-      <ion-item *ngFor="let item of items" text-wrap (tap)="goToDetail(item)">
+      <ion-item tappable *ngFor="let item of items" text-wrap (tap)="goToDetail(item)">
         <ion-thumbnail [hidden]="!item.cover" item-left>
           <img class="item-image" src="{{item.cover}}">
         </ion-thumbnail>

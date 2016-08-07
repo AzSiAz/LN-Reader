@@ -26,7 +26,7 @@
     [hidden]="isHidden">
   </ion-searchbar>
   <ion-list>
-    <ion-item detail-push text-wrap *ngFor="let item of items" (tap)="goToDetail(item)">
+    <ion-item tappable detail-push text-wrap *ngFor="let item of items" (tap)="goToDetail(item)">
       {{item.title}}
       <!--<ion-icon name="arrow-forward" item-right></ion-icon>-->
     </ion-item>
