@@ -72,8 +72,8 @@ export class NovelDetailPage {
   }
   
   openInBrowser(item) {
-    name = item.title.replace(/ /g, "_");
-    cordova.InAppBrowser.open(`https://www.baka-tsuki.org/project/index.php?title=${name}`, "_system", '')
+    let name = item.title.replace(/ /g, "_");
+    cordova.InAppBrowser.open(`https://www.baka-tsuki.org/project/index.php?title=${name}`, "_system", '');
   }
   
   addFav() {

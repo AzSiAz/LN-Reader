@@ -73,8 +73,8 @@ export class FavoriteDetailPage {
   }
   
   openInBrowser(item) {
-    name = item.title.replace(/ /g, "_");
-    cordova.InAppBrowser.open(`https://www.baka-tsuki.org/project/index.php?title=${name}`, "_system", '')
+    let name = item.replace(/ /g, "_");
+    cordova.InAppBrowser.open(`https://www.baka-tsuki.org/project/index.php?title=${name}`, "_system", '');
   }
   
   openChapter(item) {
