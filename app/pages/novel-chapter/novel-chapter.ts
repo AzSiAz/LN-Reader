@@ -1,6 +1,6 @@
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import {App, Popover, NavController, Content, NavParams, Toast, Platform, Storage, LocalStorage} from 'ionic-angular';
+import {App, PopoverController, Content, NavParams, ToastController, Platform, Storage, LocalStorage} from 'ionic-angular';
 import {PopoverChapterReader} from '../../components/PopoverChapterReader'
 
 @Component({
@@ -23,7 +23,7 @@ export class NovelChapterPage {
   private lastScrollTop = 0;
   public delta = 5;
 
-  constructor(private nav: NavController, private params:NavParams, private novelservice:NovelService, private platform: Platform) {
+  constructor(private popoverCtrl: PopoverController, private toastCtrl: ToastController, private params:NavParams, private novelservice:NovelService, private platform: Platform) {
       this.chapter = '';
       this.data = this.params.data;
       if (!localStorage.getItem("size") && !localStorage.getItem("color") && !localStorage.getItem("font")) {
@@ -51,12 +51,12 @@ export class NovelChapterPage {
   }
   
   ionViewLoaded() {
-        let toast = Toast.create({
+        let toast = this.toastCtrl.create({
 			      message: `Loading ${this.data.title}`,
             showCloseButton: true,
 			      dismissOnPageChange: true
 		    });
-        this.nav.present(toast);
+        toast.present();
         if (this.data.linktype == "internal") {
             this.novelservice.getChapter(this.data.page).then(data => {
                 this.chapter = data;
@@ -66,12 +66,12 @@ export class NovelChapterPage {
     }
 
   presentPopover(ev) {
-        let popover = Popover.create(PopoverChapterReader, {
+        let popover = this.popoverCtrl.create(PopoverChapterReader, {
             contentEle: this.contentref.nativeElement,
             textEle: this.text.nativeElement
         });
 
-        this.nav.present(popover, {
+        popover.present({
             ev: ev
         });
   }

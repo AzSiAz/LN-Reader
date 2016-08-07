@@ -16,9 +16,9 @@
     <ion-item>
       <ion-label>Language</ion-label>
       <ion-select (ionChange)="langChange($event)" [(ngModel)]="lang">
-        <ion-option value="english" checked="{{check1}}">English</ion-option>
-        <ion-option value="french" checked="{{check2}}">French</ion-option>
-        <ion-option value="spanish" checked="{{check3}}">Spanish</ion-option>
+        <ion-option value="english" selected="{{check1}}">English</ion-option>
+        <ion-option value="french" selected="{{check2}}">French</ion-option>
+        <ion-option value="spanish" selected="{{check3}}">Spanish</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>

@@ -1,4 +1,4 @@
-import {Nav, NavParams, Toast, NavController} from 'ionic-angular';
+import {Nav, NavController, NavParams, ToastController} from 'ionic-angular';
 import {Component} from '@angular/core';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
@@ -19,7 +19,7 @@ export class FavoriteDetailPage {
   data: any;
   shownGroup: any;
   
-  constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
+  constructor(private toastCtrl: ToastController, private navcontroller: NavController, private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
     this.novel = {};
     this.data = this.params.data;
   }
@@ -29,26 +29,19 @@ export class FavoriteDetailPage {
   }
   
   doRefresh(event) {
-    let toast = Toast.create({
-			message: `Refreshing ${this.data}`,
-      showCloseButton: true,
-			dismissOnPageChange: true
-		});
-		this.nav.present(toast);
 		this.novelservice.getFavDetail(this.data, true).then(data => {
       this.novel = data;
-			toast.dismiss();
 			event.complete();
     });
   }
   
   init(refresh = false) {
-    let toast = Toast.create({
+    let toast = this.toastCtrl.create({
 			message: `Loading ${this.data}`,
       showCloseButton: true,
 			dismissOnPageChange: true
 		});
-    this.nav.present(toast);
+    toast.present(toast);
     this.novelservice.getFavDetail(this.data, refresh).then(data => {
       this.novel = data;
       toast.dismiss();
@@ -90,10 +83,11 @@ export class FavoriteDetailPage {
   
   removeFav() {
     this.novelservice.removeFav(this.data).then(a => {
-      this.nav.present(Toast.create({
+      let toast = this.toastCtrl.create({
         message: `${this.data} removed`,
         duration: 1000
-      }));
+      })
+      toast.present();
       this.events.publish('fav:removed');
       this.navcontroller.popToRoot();
     })

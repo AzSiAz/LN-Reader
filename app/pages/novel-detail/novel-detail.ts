@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Nav, NavParams, Toast} from 'ionic-angular';
+import {Nav, NavParams, ToastController} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Events} from 'ionic-angular';
@@ -18,7 +18,7 @@ export class NovelDetailPage {
   data: any;
   shownGroup: any;
   
-  constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
+  constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
     this.novel = {};
     this.data = this.params.data;
   }
@@ -28,12 +28,12 @@ export class NovelDetailPage {
   }
   
   init() {
-    let toast = Toast.create({
+    let toast = this.toastCtrl.create({
 			message: `Loading ${this.data.title}`,
       showCloseButton: true,
 			dismissOnPageChange: true
 		});
-    this.nav.present(toast);
+    toast.present();
     this.novelservice.getNovelDetail(this.data.page).then(data => {
       this.novel = data;
       toast.dismiss();
@@ -77,33 +77,29 @@ export class NovelDetailPage {
   }
   
   addFav() {
-    let toast = Toast.create({
+    let toast = this.toastCtrl.create({
 			message: `Adding ${this.data.title} to favorite`,
       showCloseButton: true,
 			dismissOnPageChange: true
 		});
-    this.nav.present(toast);
+    toast.present();
     this.novelservice.addFavorite(this.novel).then(a => {
       toast.dismiss();
-      this.nav.present(
-        Toast.create({
+      this.toastCtrl.create({
           message: `${this.data.title} added`,
           duration: 1000,
           showCloseButton: true,
 			    dismissOnPageChange: true
-        })
-      );
+        }).present();
       this.events.publish('fav:added'); 
     }, e => {
       toast.dismiss();
-      this.nav.present(
-          Toast.create({
+      this.toastCtrl.create({
             message: `${this.data.title} already added`,
             showCloseButton: true,
 			      dismissOnPageChange: true,
             duration: 1000
-          })
-        );
+          }).present();
     })
   }
   

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Toast} from 'ionic-angular';
+import {NavController, ToastController} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelDetailPage} from '../novel-detail/novel-detail';
 
@@ -16,20 +16,14 @@ export class Home {
 	isHidden: boolean = true;
 	hideCancel: boolean = false;
 	save: any;
+	loading: boolean = true;
 	myInput: string;
 
-	constructor(private novelservice: NovelService, private nav: NavController) {}
+	constructor(private novelservice: NovelService, private nav: NavController, private toastCtrl: ToastController) {}
 
 	ionViewLoaded() {
-		let toast = Toast.create({
-			message: 'Loading List',
-			showCloseButton: true,
-			dismissOnPageChange: true
-		});
-		this.nav.present(toast);
   		this.novelservice.getNovelList(false).then(data => {
 			this.items = data;
-			toast.dismiss();
   		});
 	}
 
@@ -44,13 +38,8 @@ export class Home {
 	}
 
 	doRefresh(event) {
-		// let toast = Toast.create({
-		// 	message: 'Refreshing List'
-		// });
-		// this.nav.present(toast);
 		this.novelservice.getNovelList(true).then(data => {
   			this.items = data;
-			// toast.dismiss();
 			event.complete();
   		});
 	}

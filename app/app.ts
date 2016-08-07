@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, enableProdMode} from '@angular/core';
 import {ionicBootstrap, Platform} from 'ionic-angular';
 
 import {StatusBar} from 'ionic-native';
@@ -38,3 +38,4 @@ export class MyApp {
 ionicBootstrap(MyApp, [], {
 //   tabbarPlacement: 'bottom'
 });
+enableProdMode();
