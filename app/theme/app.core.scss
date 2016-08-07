@@ -20,3 +20,7 @@
 @import "../pages/settings-news/settings-news.scss";
 
 @import "../pages/favorite-detail/favorite-detail.scss";
+
+ion-item:hover {
+    background-color: lightgray !important;
+}
