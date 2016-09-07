@@ -9,6 +9,8 @@ import {NovelService} from '../../providers/novel-service/novel-service';
   Ionic pages and navigation.
 */
 
+declare let cordova;
+
 @Component({
   templateUrl: 'build/pages/settings-news/settings-news.html',
   providers: [NovelService]

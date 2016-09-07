@@ -4,6 +4,7 @@ import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Events} from 'ionic-angular';
 
+declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/novel-detail/novel-detail.html',
@@ -12,13 +13,15 @@ import {Events} from 'ionic-angular';
 
 export class NovelDetailPage {
   
+  loading: boolean = true;
   param: any;
   pushPage: any;
   novel: any;
   data: any;
   shownGroup: any;
   
-  constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
+  constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService,
+   private events: Events, private toastCtrl: ToastController) {
     this.novel = {};
     this.data = this.params.data;
   }
@@ -28,15 +31,9 @@ export class NovelDetailPage {
   }
   
   init() {
-    let toast = this.toastCtrl.create({
-			message: `Loading ${this.data.title}`,
-      showCloseButton: true,
-			dismissOnPageChange: true
-		});
-    toast.present();
     this.novelservice.getNovelDetail(this.data.page).then(data => {
       this.novel = data;
-      toast.dismiss();
+      this.loading = false;
     })
   }
   
@@ -91,15 +88,15 @@ export class NovelDetailPage {
           showCloseButton: true,
 			    dismissOnPageChange: true
         }).present();
-      this.events.publish('fav:added'); 
+      this.events.publish('fav:added');
     }, e => {
       toast.dismiss();
       this.toastCtrl.create({
-            message: `${this.data.title} already added`,
-            showCloseButton: true,
-			      dismissOnPageChange: true,
-            duration: 1000
-          }).present();
+        message: `${this.data.title} already added`,
+        showCloseButton: true,
+        dismissOnPageChange: true,
+        duration: 1000
+      }).present();
     })
   }
   

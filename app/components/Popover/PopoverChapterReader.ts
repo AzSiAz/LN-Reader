@@ -5,6 +5,7 @@ import {App, Popover, NavController, Content, NavParams, Toast, Platform, Storag
 @Component({
   templateUrl: 'build/components/PopoverChapterReader.html',
 })
+
 export class PopoverChapterReader {
   background: string;
   contentEle: any;

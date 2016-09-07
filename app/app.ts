@@ -5,6 +5,8 @@ import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
 import {SqlManager} from './providers/sql-manager/sql-manager'
 
+declare let window;
+
 @Component({
 	template: '<ion-nav [root]="rootPage"></ion-nav>',
 })

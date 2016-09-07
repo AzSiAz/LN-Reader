@@ -5,6 +5,7 @@ import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Favorites} from '../favorites/favorites';
 import {Events} from 'ionic-angular';
 
+declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/favorite-detail/favorite-detail.html',
@@ -19,7 +20,8 @@ export class FavoriteDetailPage {
   data: any;
   shownGroup: any;
   
-  constructor(private toastCtrl: ToastController, private navcontroller: NavController, private nav: Nav, private params: NavParams, private novelservice:NovelService, private events: Events) {
+  constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams,
+   private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
     this.novel = {};
     this.data = this.params.data;
   }
@@ -36,15 +38,8 @@ export class FavoriteDetailPage {
   }
   
   init(refresh = false) {
-    let toast = this.toastCtrl.create({
-			message: `Loading ${this.data}`,
-      showCloseButton: true,
-			dismissOnPageChange: true
-		});
-    toast.present(toast);
     this.novelservice.getFavDetail(this.data, refresh).then(data => {
       this.novel = data;
-      toast.dismiss();
     })
   }
 

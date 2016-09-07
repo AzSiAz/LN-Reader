@@ -13,44 +13,49 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingSpinner="circles"
-      refreshingText="Refreshing detail..."
-    >
-    </ion-refresher-content>
-  </ion-refresher>
-  
-  <center><img [hidden]="!novel.cover" src="{{novel.cover}}"></center>
-  <h5 [hidden]="!novel.status">Status : </h5>
-  <span>{{novel.status}}</span>
-  <h5 [hidden]="!novel.updateDate">Update date : </h5>
-  <span>{{novel.updateDate}}</span>
-  <!--<ion-datetime displayFormat="DDDD MMMM, YYYY HH:mm" [ngModel]="novel.updateDate"></ion-datetime>-->
+  <div *ngIf="loading">
+    Loading
+  </div>
+  <div *ngIf="!loading">
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing detail..."
+      >
+      </ion-refresher-content>
+    </ion-refresher>
+    
+    <center><img [hidden]="!novel.cover" src="{{novel.cover}}"></center>
+    <h5 [hidden]="!novel.status">Status : </h5>
+    <span>{{novel.status}}</span>
+    <h5 [hidden]="!novel.updateDate">Update date : </h5>
+    <span>{{novel.updateDate}}</span>
+    <!--<ion-datetime displayFormat="DDDD MMMM, YYYY HH:mm" [ngModel]="novel.updateDate"></ion-datetime>-->
 
-  <h5 [hidden]="!novel.author">Author : </h5>
-  <span>{{novel.author}}</span>
-  <h5 [hidden]="!novel.illustrator">Illustrator : </h5>
-  <span>{{novel.illustrator}}</span>
-  <h5 [hidden]="!novel.synopsis">Synopsis :</h5>
-  <p>{{novel.synopsis}}</p>
-  <span *ngFor="let arc of novel.tome">
-    <center><h4>{{arc.title}}</h4></center>
-    <ion-list class="list">
-      <div *ngFor="let items of arc.tome">
-        <ion-item text-wrap [ngClass]="setClass(items.cover)" class="item" [ngClass]="isGroupShown(items) ? 'ion-minus' : 'ion-plus'" (tap)="toggleGroup(items)" [ngClass]="{active: isGroupShown(items)}">
-          <ion-thumbnail [hidden]="!items.cover" item-left>
-            <img class="item-image" src="{{items.cover}}">
-          </ion-thumbnail>
-          <h2>{{items.title}}</h2>
-        </ion-item>
-        <ion-item text-wrap class="item-accordion item" *ngFor="let item of items.chapters" [hidden]="!isGroupShown(items)" (tap)="openChapter(item)">
-          {{item.title}}
-        </ion-item>
-      </div>
-    </ion-list>
-  </span>
+    <h5 [hidden]="!novel.author">Author : </h5>
+    <span>{{novel.author}}</span>
+    <h5 [hidden]="!novel.illustrator">Illustrator : </h5>
+    <span>{{novel.illustrator}}</span>
+    <h5 [hidden]="!novel.synopsis">Synopsis :</h5>
+    <p>{{novel.synopsis}}</p>
+    <span *ngFor="let arc of novel.tome">
+      <center><h4>{{arc.title}}</h4></center>
+      <ion-list class="list">
+        <div *ngFor="let items of arc.tome">
+          <ion-item text-wrap [ngClass]="setClass(items.cover)" class="item" [ngClass]="isGroupShown(items) ? 'ion-minus' : 'ion-plus'" (tap)="toggleGroup(items)" [ngClass]="{active: isGroupShown(items)}">
+            <ion-thumbnail [hidden]="!items.cover" item-left>
+              <img class="item-image" src="{{items.cover}}">
+            </ion-thumbnail>
+            <h2>{{items.title}}</h2>
+          </ion-item>
+          <ion-item text-wrap class="item-accordion item" *ngFor="let item of items.chapters" [hidden]="!isGroupShown(items)" (tap)="openChapter(item)">
+            {{item.title}}
+          </ion-item>
+        </div>
+      </ion-list>
+    </span>
+  </div>
 </ion-content>
 <!--[navPush]="pushPage" [navParams]="{data: item}"-->

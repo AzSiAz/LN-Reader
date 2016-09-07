@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, ToastController} from 'ionic-angular';
+import {NavController, ToastController, Events} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelDetailPage} from '../novel-detail/novel-detail';
 
@@ -19,12 +19,20 @@ export class Home {
 	loading: boolean = true;
 	myInput: string;
 
-	constructor(private novelservice: NovelService, private nav: NavController, private toastCtrl: ToastController) {}
+	constructor(private novelservice: NovelService, private nav: NavController, private toastCtrl: ToastController, private events: Events) {
+		this.events.subscribe("settings:lang_change", () => {
+			this.init(true);
+		});
+	}
+
+	init(params: boolean = false) {
+		this.novelservice.getNovelList(params).then(data => {
+			this.items = data;
+		});
+	}
 
 	ionViewLoaded() {
-  		this.novelservice.getNovelList(false).then(data => {
-			this.items = data;
-  		});
+  		this.init();
 	}
 
 	hideSearch() {
@@ -45,17 +53,13 @@ export class Home {
 	}
 
 	onInput(ev) {
-
 		this.novelservice.getNovelList(false).then(data => {
 			this.items = data;
-
 			var q = ev.target.value;
-
 			if (q.trim() == '') {
 				this.items = this.save;
 				return;
 			}
-
 			this.items = this.items.filter((v) => {
 			if (v.title.toLowerCase().indexOf(q.toLowerCase()) > -1) {
 				return true;
