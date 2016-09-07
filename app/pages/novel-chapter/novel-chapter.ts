@@ -1,11 +1,13 @@
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {App, PopoverController, Content, NavParams, ToastController, Platform, Storage, LocalStorage} from 'ionic-angular';
-import {PopoverChapterReader} from '../../components/Popover/PopoverChapterReader'
+import {PopoverChapterReader} from '../../components/Popover/PopoverChapterReader';
+import {Loading} from '../../components/loading/loading';
 
 @Component({
   templateUrl: 'build/pages/novel-chapter/novel-chapter.html',
-  providers: [NovelService]
+  providers: [NovelService],
+  directives: [Loading]
 })
 
 export class NovelChapterPage {
@@ -43,11 +45,11 @@ export class NovelChapterPage {
     ionViewLoaded() {
         if (this.data.linktype == "internal") {
             this.novelservice.getChapter(this.data.page).then(data => {
-
+                this.loading = false;
+                this.initWithParams();
                 this.chapter = data;
                 let top: number = parseInt(localStorage.getItem(this.data.title));
-                this.content.scrollTo(0, top).then(() => {
-                })
+                this.content.scrollTo(0, top);
             })
         }
     }
@@ -56,7 +58,7 @@ export class NovelChapterPage {
         localStorage.setItem(this.data.title, `${this.content.getScrollTop()}`);
     }
 
-    initParams() {
+    initWithParams() {
         let text = document.getElementById("parser_text");
         let content = document.getElementById("parser_content");
         let color = JSON.parse(localStorage.getItem("color"));
@@ -65,6 +67,7 @@ export class NovelChapterPage {
         content.style.backgroundColor = color.bg;
         content.style.color = color.fg;
     }
+
     presentPopover(ev) {
         let popover = this.popoverCtrl.create(PopoverChapterReader, {
             contentEle: this.contentref.nativeElement,

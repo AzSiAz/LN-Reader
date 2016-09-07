@@ -1,15 +1,16 @@
-import {Nav, NavController, NavParams, ToastController} from 'ionic-angular';
+import {Nav, NavController, NavParams, ToastController, Events} from 'ionic-angular';
 import {Component} from '@angular/core';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Favorites} from '../favorites/favorites';
-import {Events} from 'ionic-angular';
+import {Loading} from '../../components/loading/loading';
 
 declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/favorite-detail/favorite-detail.html',
-  providers: [NovelService]
+  providers: [NovelService],
+  directives: [Loading]
 })
 
 export class FavoriteDetailPage {
@@ -19,7 +20,8 @@ export class FavoriteDetailPage {
   novel: any;
   data: any;
   shownGroup: any;
-  
+  loading: boolean = true;
+
   constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams,
    private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
     this.novel = {};
@@ -40,6 +42,7 @@ export class FavoriteDetailPage {
   init(refresh = false) {
     this.novelservice.getFavDetail(this.data, refresh).then(data => {
       this.novel = data;
+      this.loading = false;
     })
   }
 

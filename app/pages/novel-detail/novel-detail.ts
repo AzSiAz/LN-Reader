@@ -3,12 +3,14 @@ import {Nav, NavParams, ToastController} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Events} from 'ionic-angular';
+import {Loading} from '../../components/loading/loading';
 
 declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/novel-detail/novel-detail.html',
-  providers: [NovelService]
+  providers: [NovelService],
+  directives: [Loading]
 })
 
 export class NovelDetailPage {

@@ -1,19 +1,19 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import {App, Popover, NavController, Content, NavParams, Toast, Platform, Storage, LocalStorage} from 'ionic-angular';
+import {App, Popover, Content, NavParams, Platform} from 'ionic-angular';
 
 
 @Component({
-  templateUrl: 'build/components/PopoverChapterReader.html',
+  templateUrl: 'build/components/Popover/PopoverChapterReader.html',
 })
 
 export class PopoverChapterReader {
+
   background: string;
   contentEle: any;
   textEle: any;
   fontFamily;
   default: any = {};
   size: number;
-  local: Storage;
 
   colors = {
     'white': {
