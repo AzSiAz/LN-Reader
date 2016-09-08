@@ -4,29 +4,28 @@ loading .container {
   transition: z-index 0.2s step-end;
  
   width: 100%;
-  height: 90%;
+  height: 100%;
   position: absolute;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
  
-  &.busy {
-    z-index: 9999;
-    transition: z-index 0.2s step-start;
-    .backdrop {
-      opacity: 0.3;
-    }
-  }
+  // &.busy {
+  //   z-index: 9999;
+  //   transition: z-index 0.2s step-start;
+  //   .backdrop {
+  //     opacity: 0.3;
+  //   }
+  // }
  
-  .backdrop {
-    opacity: 0.01;
-    transition: opacity 0.2s;
-  }
+  // .backdrop {
+  //   opacity: 0.01;
+  //   transition: opacity 0.2s;
+  // }
  
   ion-spinner {
     width: 60px;
     height: 60px;
   }
- 
 }

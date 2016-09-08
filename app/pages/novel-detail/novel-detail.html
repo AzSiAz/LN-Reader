@@ -13,9 +13,6 @@
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="loading">
-    <loading id="loading"></loading>
-  </div>
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingIcon="arrow-dropdown"
@@ -56,4 +53,3 @@
     </ion-list>
   </span>
 </ion-content>
-<!--[navPush]="pushPage" [navParams]="{data: item}"-->

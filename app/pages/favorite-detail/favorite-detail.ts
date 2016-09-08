@@ -20,10 +20,11 @@ export class FavoriteDetailPage {
   novel: any;
   data: any;
   shownGroup: any;
-  loading: boolean = true;
+  loading: boolean;
 
   constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams,
-   private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
+  private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
+    this.loading = true;
     this.novel = {};
     this.data = this.params.data;
   }

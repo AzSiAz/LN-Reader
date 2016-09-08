@@ -1,21 +1,20 @@
 import {Component} from '@angular/core';
-import {Nav, NavParams, ToastController} from 'ionic-angular';
+import {Nav, NavParams, ToastController, Events} from 'ionic-angular';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
-import {Events} from 'ionic-angular';
-import {Loading} from '../../components/loading/loading';
+// import {Loading} from '../../components/loading/loading';
 
 declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/novel-detail/novel-detail.html',
   providers: [NovelService],
-  directives: [Loading]
+  // directives: [Loading]
 })
 
 export class NovelDetailPage {
   
-  loading: boolean = true;
+  loading: boolean;
   param: any;
   pushPage: any;
   novel: any;
@@ -24,6 +23,7 @@ export class NovelDetailPage {
   
   constructor(private nav: Nav, private params: NavParams, private novelservice:NovelService,
    private events: Events, private toastCtrl: ToastController) {
+    this.loading = true;
     this.novel = {};
     this.data = this.params.data;
   }
@@ -32,10 +32,10 @@ export class NovelDetailPage {
     this.init();
   }
   
-  init() {
+  init() {  
     this.novelservice.getNovelDetail(this.data.page).then(data => {
-      this.novel = data;
       this.loading = false;
+      this.novel = data;
     })
   }
   

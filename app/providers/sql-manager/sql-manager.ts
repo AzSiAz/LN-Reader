@@ -51,6 +51,7 @@ export class SqlManager {
   }
   
   static FirstInit() {
+
     SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "novel_list" (
       "id"	INTEGER PRIMARY KEY AUTOINCREMENT,
       "title"	TEXT,
@@ -59,6 +60,7 @@ export class SqlManager {
       "lastrevisedid"	TEXT,
       "pageid"	INTEGER
     );`);
+
     SqlManager.storage.query(`CREATE TABLE IF NOT EXISTS "favorites" (
       "id"	INTEGER PRIMARY KEY AUTOINCREMENT,
       "title"	TEXT UNIQUE,
@@ -72,6 +74,7 @@ export class SqlManager {
       "categories"	TEXT,
       "tome"	TEXT
     );`);
+
   }
   
   static updateDB() {
@@ -194,6 +197,29 @@ export class SqlManager {
           list.push({
             title: data.res.rows.item(i).title,
             cover: data.res.rows.item(i).cover
+          });
+        }
+        return list;
+      }
+      return [];
+    }, (error) => {
+      console.log("ERROR -> " + JSON.stringify(error.err));
+    });
+  }
+
+  static getFavSpotlightList() {
+    return SqlManager.storage.query('SELECT title, cover FROM "favorites" ORDER BY title;').then((data) => {
+      if(data.res.rows.length > 0) {
+        let list = [];
+        for(var i = 0; i < data.res.rows.length; i++) {
+          list.push({
+            domain: 'tech.azsiaz.LNReader',
+            identifier: data.res.rows.item(i).title,
+            title: data.res.rows.item(i).title,
+            description: data.res.rows.item(i).title,
+            url: data.res.rows.item(i).cover,
+            keywords: data.res.rows.item(i).title.split(" "),
+            lifetime: 99999999
           });
         }
         return list;

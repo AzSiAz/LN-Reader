@@ -13,9 +13,7 @@
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="loading">
-    <loading id="loading"></loading>
-  </div>
+  <!--<loading id="loading" *ngIf="loading"></loading>-->
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingIcon="arrow-dropdown"

@@ -10,8 +10,6 @@
 </ion-header>
 
 <ion-content id="parser_content" fullscreen="true" #popoverContent class="novel-chapter popover-page" padding >
-  <div *ngIf="loading">
-    <loading id="loading"></loading>
-  </div>
+  <!--<loading *ngIf="loading" id="loading"></loading>-->
   <div #popoverText id="parser_text" class="text-to-change" [innerHTML]="chapter"></div>
 </ion-content>
