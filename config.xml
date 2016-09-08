@@ -62,10 +62,10 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
-    <feature name="CDVWKWebViewEngine">
+    <!--<feature name="CDVWKWebViewEngine">
         <param name="ios-package" value="CDVWKWebViewEngine" />
     </feature>
-    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />-->
     
     <icon src="resources/ios/icon/icon-small@3x.png" />
     <plugin name="cordova-plugin-device" spec="~1.1.2" />

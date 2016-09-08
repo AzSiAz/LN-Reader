@@ -3,14 +3,12 @@ import {Component} from '@angular/core';
 import {NovelService} from '../../providers/novel-service/novel-service';
 import {NovelChapterPage} from '../novel-chapter/novel-chapter';
 import {Favorites} from '../favorites/favorites';
-import {Loading} from '../../components/loading/loading';
 
 declare let cordova;
 
 @Component({
   templateUrl: 'build/pages/favorite-detail/favorite-detail.html',
-  providers: [NovelService],
-  directives: [Loading]
+  providers: [NovelService]
 })
 
 export class FavoriteDetailPage {
@@ -20,11 +18,9 @@ export class FavoriteDetailPage {
   novel: any;
   data: any;
   shownGroup: any;
-  loading: boolean;
 
   constructor(private navcontroller: NavController, private nav: Nav, private params: NavParams,
   private novelservice:NovelService, private events: Events, private toastCtrl: ToastController) {
-    this.loading = true;
     this.novel = {};
     this.data = this.params.data;
   }
@@ -43,7 +39,6 @@ export class FavoriteDetailPage {
   init(refresh = false) {
     this.novelservice.getFavDetail(this.data, refresh).then(data => {
       this.novel = data;
-      this.loading = false;
     })
   }
 

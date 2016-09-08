@@ -2,12 +2,10 @@ import {NovelService} from '../../providers/novel-service/novel-service';
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {App, PopoverController, Content, NavParams, ToastController, Platform, Storage, LocalStorage} from 'ionic-angular';
 import {PopoverChapterReader} from '../../components/Popover/PopoverChapterReader';
-import {Loading} from '../../components/loading/loading';
 
 @Component({
   templateUrl: 'build/pages/novel-chapter/novel-chapter.html',
-  providers: [NovelService],
-  directives: [Loading]
+  providers: [NovelService]
 })
 
 export class NovelChapterPage {
@@ -18,7 +16,6 @@ export class NovelChapterPage {
 
     chapter: any;
     data: any;
-    loading: boolean = true
 
     constructor(private popoverCtrl: PopoverController, private toastCtrl: ToastController, private params:NavParams, private novelservice:NovelService, private platform: Platform) {
         this.chapter = '';
@@ -45,7 +42,6 @@ export class NovelChapterPage {
     ionViewLoaded() {
         if (this.data.linktype == "internal") {
             this.novelservice.getChapter(this.data.page).then(data => {
-                this.loading = false;
                 this.initWithParams();
                 this.chapter = data;
                 let top: number = parseInt(localStorage.getItem(this.data.title));
