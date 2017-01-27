@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/AzSiAz/LN-Reader.png?label=ready&title=Ready)](https://waffle.io/AzSiAz/LN-Reader)
 # LN-Reader     
 
 ## Done      
