@@ -18,8 +18,8 @@ platform :ios do
     desc 'Build the iOS application.'  
     private_lane :build do  
       certificates
-      gym(scheme: 'RELEASE', project: './ios/LNReader.xcodeproj')
       increment_build_number(xcodeproj: './ios/LNReader.xcodeproj')
+      gym(scheme: 'RELEASE', project: './ios/LNReader.xcodeproj')
     end
 
     desc 'Ship to Testflight.'  
