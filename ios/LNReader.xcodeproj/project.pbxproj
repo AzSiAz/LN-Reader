@@ -791,6 +791,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 27U585A9E3;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1347,6 +1348,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 27U585A9E3;
@@ -1366,6 +1368,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.LNReader;
 				PRODUCT_NAME = LNReader;
+				PROVISIONING_PROFILE = "7fd4063f-5440-4f3e-9eea-f3a8831895c2";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development tech.azsiaz.LNReader";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1374,6 +1378,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				HEADER_SEARCH_PATHS = (
@@ -1392,6 +1398,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.LNReader;
 				PRODUCT_NAME = LNReader;
+				PROVISIONING_PROFILE = "bf51c70d-a3f0-4d84-acd8-65270774210d";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore tech.azsiaz.LNReader";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
