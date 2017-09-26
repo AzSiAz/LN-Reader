@@ -25,6 +25,7 @@ platform :ios do
     desc 'Ship to Testflight.'  
     lane :beta do
       build
+      clean_build_artifacts
       commit_version_bump(message: 'Bump build', xcodeproj: './ios/LNReader.xcodeproj')
       push_to_git_remote
       pilot
