@@ -32,7 +32,7 @@ platform :ios do
     # end
     lane :beta do
       gym(scheme: "MyApp",
-          workspace: "Example.xcworkspace",
+          workspace: './ios/LNReader.xcodeproj',
           include_bitcode: true)
     end    
 end
