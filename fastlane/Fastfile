@@ -31,8 +31,9 @@ platform :ios do
     #   pilot
     # end
     lane :beta do
-      gym(scheme: "MyApp",
-          project: './ios/LNReader.xcodeproj',
-          include_bitcode: true)
+      gym(scheme: "LNReader",
+        certificates
+        project: './ios/LNReader.xcodeproj',
+        include_bitcode: true)
     end    
 end
