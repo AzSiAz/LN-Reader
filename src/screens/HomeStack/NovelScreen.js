@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, StatusBar, ScrollView } from 'react-n
 import { ListItem, SearchBar } from 'react-native-elements'
 
 import LoadingComponent from './../../components/LoadingComponent'
+import ErrorComponent from './../../components/ErrorComponent'
 
 export default class NovelScreen extends React.PureComponent {
   static navigationOptions = {
@@ -16,25 +17,34 @@ export default class NovelScreen extends React.PureComponent {
   state = {
     novelList: [],
     isFetching: true,
-    search: ''
+    search: '',
+    error: undefined
   }
 
   async componentWillMount() {
-    const fetched = await fetch('https://api.azsiaz.tech/ln/english')
-    const json = await fetched.json()
+    try {
+      const fetched = await fetch('https://api.azsiaz.tech/ln/english')
+      const json = await fetched.json()
 
-    this.setState((prevState) => {
-      return { novelList: json.titles, isFetching: false }
-    })
+      this.setState((prevState) => {
+        return { ...prevState, novelList: json.titles, isFetching: false }
+      })
+    }
+    catch(e) {
+      this.setState((prevState) => {
+        return { ...prevState, error: e.message, isFetching: false }
+      })
+    }
   }
 
   render() {
-    const { search, isFetching } = this.state
+    const { search, isFetching, error } = this.state
     const data = this.state.novelList.filter((item) => item.title.toLowerCase().includes(this.state.search.toLowerCase()))
     const rowToRender = (data.length / 2).toFixed()
     const clearIcon = search !== '' ? true : false 
 
     if (isFetching) return <LoadingComponent name='Novel List' />
+    if (error) return <ErrorComponent error={error} />
 
     return (
       <ScrollView style={styles.container}>
@@ -47,13 +57,15 @@ export default class NovelScreen extends React.PureComponent {
           initialNumToRender={ rowToRender }
           data={ data }
           keyExtractor={ (item) => item.page }
-          renderItem={({item}) => 
-            <ListItem onPress={this._onPress.bind(null, item)} title={item.title} /> 
-          }
+          renderItem={this._renderItem}
         />
       </ScrollView>
     )
   }
+
+  _renderItem = ({ item }) => (
+    <ListItem onPress={this._onPress.bind(null, item)} title={item.title} />
+  )
 
   _onPress = (novel) => {
     const { navigate } = this.props.navigation

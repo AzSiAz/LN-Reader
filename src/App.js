@@ -5,11 +5,12 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Info from 'react-native-device-info'
+import codePush from 'react-native-code-push'
 
 import TabNavigator from './screens'
 import IntroComponent from './components/IntroComponent'
 
-export default class LNReader extends Component {
+class LNReader extends Component {
 
   state = {
     showInfo: false,
@@ -47,6 +48,7 @@ export default class LNReader extends Component {
       version: Info.getReadableVersion(),
       deviceVersion: Info.getSystemVersion()
     }
+
     await AsyncStorage.mergeItem('info', JSON.stringify(currentInfo))
 
     this.setState((prevState) => (
@@ -65,4 +67,6 @@ export default class LNReader extends Component {
   }
 }
 
-AppRegistry.registerComponent('LNReader', () => LNReader);
+const App = codePush(LNReader)
+
+AppRegistry.registerComponent('LNReader', () => App)

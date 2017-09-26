@@ -1,0 +1,24 @@
+{
+    "files.associations": {
+        "*.js": "javascriptreact"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/android": true,
+        "**/ios": true,
+        "**/node_modules": true,
+        "**/.buckconfig": true,
+        "**/.flowconfig": true,
+        "**/.watchmanconfig": true,
+        "**/app.json": true,
+        "**/jsconfig.json": true,
+        "**/package-lock.json": true,
+        "**/yarn.json": true,
+        "**/.babelrc": true,
+        "**/.vscode": true,
+    }
+}

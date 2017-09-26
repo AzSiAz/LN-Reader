@@ -1,0 +1,35 @@
+fastlane_version '2.59.0'
+
+before_all do  
+    ensure_git_branch
+    ensure_git_status_clean
+    git_pull
+end
+
+platform :ios do  
+    # iOS Lanes
+    desc 'Fetch certificates and provisioning profiles'  
+    lane :certificates  
+      match(app_identifier: 'tech.azsiaz.LNReader', type: 'development', readonly: true)
+      match(app_identifier: 'tech.azsiaz.LNReader', type: 'appstore', readonly: true)
+    end
+    
+    desc 'Build the iOS application.'  
+    private_lane :build do  
+      certificates
+      gym(scheme: 'RELEASE', project: './ios/LNReader.xcodeproj')
+      increment_build_number(xcodeproj: './ios/LNReader.xcodeproj')
+    end
+
+    desc 'Ship to Testflight.'  
+    lane :beta do
+      build
+      commit_version_bump(message: 'Bump build', xcodeproj: './ios/LNReader.xcodeproj')
+      push_to_git_remote
+      pilot
+    end
+end
+
+platform :android do  
+# Android Lanes
+end
