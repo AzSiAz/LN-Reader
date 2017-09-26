@@ -9,7 +9,7 @@ end
 platform :ios do  
     # iOS Lanes
     desc 'Fetch certificates and provisioning profiles'  
-    lane :certificates  
+    lane :certificates do
       match(app_identifier: 'tech.azsiaz.LNReader', type: 'development', readonly: true)
       match(app_identifier: 'tech.azsiaz.LNReader', type: 'appstore', readonly: true)
     end
@@ -25,7 +25,7 @@ platform :ios do
     lane :beta do
       build
       commit_version_bump(message: 'Bump build', xcodeproj: './ios/LNReader.xcodeproj')
-      push_to_git_remote
+    #   push_to_git_remote
       pilot
     end
 end
