@@ -19,7 +19,7 @@ platform :ios do
     private_lane :build do  
       certificates
       increment_build_number(xcodeproj: './ios/LNReader.xcodeproj')
-      gym(scheme: 'LNReader', project: './ios/LNReader.xcodeproj')
+      gym
     end
 
     desc 'Ship to Testflight.'  
