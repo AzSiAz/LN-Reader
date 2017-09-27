@@ -1,9 +1,21 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, Image, View, TouchableHighlight, SegmentedControlIOS } from 'react-native'
+import { 
+  ScrollView,
+  StyleSheet, 
+  Text, 
+  Image, 
+  View, 
+  TouchableHighlight, 
+  SegmentedControlIOS, 
+  RefreshControl 
+} from 'react-native'
 import { Icon, Divider } from 'react-native-elements'
 
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
+
+import CategorieList from './../../components/novel/Categorie/CategorieList'
+
 
 iconHeart = [ 'md-heart-outline', 'md-heart' ]
 
@@ -12,9 +24,16 @@ export default class NovelDetailScreen extends React.PureComponent {
     title: `${navigation.state.params.title}`,
   })
 
+  constructor(props) {
+    super(props)
+
+    this.getData = this.getData.bind(this)
+  }
+
   state = {
     novel: {},
     isFetching: true,
+    refreshing: false,
     error: undefined,
     image: {},
     iconHeart: iconHeart[0],
@@ -24,23 +43,31 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   async componentWillMount() {
     try {
-      const { page } = this.props.navigation.state.params
-
-      const fetched = await fetch(
-        `https://api.azsiaz.tech/title/query/?title=${encodeURIComponent(page)}`
-      )
-      const json = await fetched.json()
-
-      this.setState((prevState) => ({
-        ...prevState, novel: json, 
-        isFetching: false, 
-      }))
+      await this.getData()
     }
     catch(e) {
       this.setState((prevState) => {
         return { ...prevState, error: e.message, isFetching: false }
       })
     }
+  }
+
+  async getData() {
+    this.setState((prevState) => (
+      {...prevState, refreshing: true}
+    ))
+    const { page } = this.props.navigation.state.params
+    
+    const fetched = await fetch(
+      `https://api.azsiaz.tech/title/query/?title=${encodeURIComponent(page)}`
+    )
+    const json = await fetched.json()
+
+    this.setState((prevState) => ({
+      ...prevState, novel: json, 
+      isFetching: false,
+      refreshing: false
+    }))
   }
 
   render() {
@@ -51,7 +78,7 @@ export default class NovelDetailScreen extends React.PureComponent {
     if (error) return <ErrorComponent error={error} />
 
     return (
-      <ScrollView style={{ backgroundColor: 'white' }}>
+      <ScrollView style={{ backgroundColor: 'white' }} refreshControl={this._renderRefreshControl()} >
         <View style={{flex: 1}}>
           <View style={styles.container}>
             <View style={styles.image}>
@@ -63,7 +90,9 @@ export default class NovelDetailScreen extends React.PureComponent {
             </View>
             <View style={{flex: 1, flexDirection: 'column'}}>
               <View style={{flex: 1, flexDirection: 'row'}}>
-                <Text style={styles.title} numberOfLines={3}>{novel.title}</Text>
+                <Text style={styles.title} numberOfLines={3}>
+                  {novel.title}
+                </Text>
                 <Icon
                   type='ionicon' 
                   style={styles.heartIcon} 
@@ -79,20 +108,31 @@ export default class NovelDetailScreen extends React.PureComponent {
               </View>
             </View>
           </View>
-          <Divider style={{ top: 25 }} />
-          <View style={{ top: 30, marginLeft: 10, marginRight: 10 }}>
-            <SegmentedControlIOS 
-              selectedIndex={selectedIndex}
-              values={[ 'Information', 'Volume' ]}
-              onValueChange={(val) => this.setState({segmentIndex: val})}
-            />
-          </View>
-          <Divider style={{ top: 35 }} />
-          <View style={{top: 40, left: 18, right: 18}}>
-            {this._renderSegment()}
+          <View style={{ paddingTop: 25 }}>
+            <Divider />
+            <View style={{ paddingTop: 5, marginLeft: 10, marginRight: 10, paddingBottom: 5 }}>
+              <SegmentedControlIOS 
+                selectedIndex={selectedIndex}
+                values={[ 'Information', 'Volume' ]}
+                onValueChange={(val) => this.setState({segmentIndex: val})}
+              />
+            </View>
+            <Divider />
+            <View style={{paddingTop: 5}}>
+              {this._renderSegment()}
+            </View>
           </View>
         </View>
       </ScrollView>
+    )
+  }
+
+  _renderRefreshControl = () => {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.getData}
+      />
     )
   }
 
@@ -105,13 +145,79 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   _renderVolume = () => {
     return (
-      <Text>Volume</Text>
+      <View style={{left: 18, right: 18}}>
+        <Text>Volume</Text>
+      </View>
     )
   }
 
   _renderInformation = () => {
+    const { categories, synopsis } = this.state.novel
+
+    const correctCat = categories.map((el) => {
+      if (el.toLowerCase().includes('genre'))
+          return el.replace('Genre -', '')
+    })
+    const filteredCat = correctCat.filter(el => typeof el === 'string')
+
+    if (filteredCat.length === 0) {
+      return (
+        <View>
+          <View style={{alignItems: 'center', flex: 1, marginBottom: 5}}>
+            <Text>No categories found</Text>
+          </View>
+          <Divider />
+          {this._renderNextInformation()}
+        </View>
+      )
+    }
     return (
-      <Text>Information</Text>
+      <View>
+        <View style={{marginLeft: 10, marginRight: 10}}>
+          <CategorieList categories={filteredCat} />
+        </View>
+        <Divider />
+        {this._renderNextInformation()}
+      </View>
+    )
+  }
+
+  _renderNextInformation = () => {
+    return (
+      <View>
+        {this._renderSynopsis()}
+        <Divider />
+        {this._renderNovelInformation()}
+        <Divider />
+      </View>
+    )
+  }
+
+  _renderSynopsis = () => {
+    const { synopsis } = this.state.novel
+
+    return (
+      <View style={{marginLeft: 18, marginRight: 18, marginTop: 5, marginBottom: 5}}>
+        <Text style={{fontSize: 18}}>
+          Synopsis:
+        </Text>
+        <Text style={{marginTop: 5}}>
+          {synopsis}
+        </Text>
+      </View>
+    )
+  }
+
+  _renderNovelInformation = () => {
+    const { updateDate, author } = this.state.novel
+
+    return (
+      <View style={{marginLeft: 18, marginRight: 18, marginTop: 5}}>
+        <Text style={{fontSize: 18, marginBottom: 5}}>Novel Information:</Text>
+        <Text style={{marginBottom: 5}}>Source: Baka-Tsuki</Text>
+        <Text style={{marginBottom: 5}}>Update Date: {updateDate}</Text>
+        <Text style={{marginBottom: 5}}>Author: {author}</Text>
+      </View>
     )
   }
 
