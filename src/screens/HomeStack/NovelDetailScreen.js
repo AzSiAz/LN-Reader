@@ -9,9 +9,10 @@ import {
   SegmentedControlIOS, 
   RefreshControl,
   ActionSheetIOS,
-  Linking
+  Linking,
+  SectionList
 } from 'react-native'
-import { Icon, Divider } from 'react-native-elements'
+import { Icon, Divider, ListItem } from 'react-native-elements'
 
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
@@ -106,6 +107,17 @@ export default class NovelDetailScreen extends React.PureComponent {
     if (isFetching) return <LoadingComponent name={params.title} />
     if (error) return <ErrorComponent error={error} />
 
+    const completed = ((novel) => {
+      // const numberSerie = novel.tome.length
+      let completed = 0
+      for (let serie of novel.tome) {
+        for (let tome of serie.tome) {
+          completed++
+        }
+      }
+      return completed
+    })(novel)
+
     return (
       <ScrollView style={{ backgroundColor: 'white' }} refreshControl={this._renderRefreshControl()} >
         <View style={{flex: 1}}>
@@ -133,7 +145,7 @@ export default class NovelDetailScreen extends React.PureComponent {
               </View>
               <View>
                 <Text>Status: {novel.status}</Text>
-                <Text>Volume number: {novel.tome[0].tome.length}</Text>
+                <Text>Volume number: {completed}</Text>
               </View>
             </View>
           </View>
@@ -173,9 +185,31 @@ export default class NovelDetailScreen extends React.PureComponent {
   }
 
   _renderVolume = () => {
+    const { tome } = this.state.novel
+    // style={{left: 18, right: 18}}
+    const data = tome.map((el, i) => {
+      return {
+        title: el.title,
+        data: el.tome.map((el, i) => {
+          return {
+            ...el,
+            key: i
+          }
+        })
+      }
+    })
+
     return (
-      <View style={{left: 18, right: 18}}>
-        <Text>Volume</Text>
+      <View>
+        <SectionList
+          renderSectionHeader={({section}) => (
+            <View style={{left: 18, right: 18, marginTop: 15, marginBottom: 15}}>
+              <Text>{section.title}</Text>
+            </View>
+          )}
+          renderItem={({item}) => <ListItem key={item.key} avatar={item.cover} title={item.title}/>}
+          sections={data}
+        />
       </View>
     )
   }
@@ -189,22 +223,18 @@ export default class NovelDetailScreen extends React.PureComponent {
     })
     const filteredCat = correctCat.filter(el => typeof el === 'string')
 
-    if (filteredCat.length === 0) {
-      return (
-        <View>
+    return (
+      <View>
+        {filteredCat.length === 0 ? (
           <View style={{alignItems: 'center', flex: 1, marginBottom: 5}}>
             <Text>No categories found</Text>
           </View>
-          <Divider />
-          {this._renderNextInformation()}
-        </View>
-      )
-    }
-    return (
-      <View>
-        <View style={{marginLeft: 10, marginRight: 10}}>
-          <CategorieList categories={filteredCat} />
-        </View>
+        ) :
+        (
+          <View style={{marginLeft: 10, marginRight: 10}}>
+            <CategorieList categories={filteredCat} />
+          </View>
+        )}
         <Divider />
         {this._renderNextInformation()}
       </View>
