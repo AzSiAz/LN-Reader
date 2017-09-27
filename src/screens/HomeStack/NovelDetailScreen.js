@@ -7,7 +7,9 @@ import {
   View, 
   TouchableHighlight, 
   SegmentedControlIOS, 
-  RefreshControl 
+  RefreshControl,
+  ActionSheetIOS,
+  Linking
 } from 'react-native'
 import { Icon, Divider } from 'react-native-elements'
 
@@ -22,11 +24,18 @@ iconHeart = [ 'md-heart-outline', 'md-heart' ]
 export default class NovelDetailScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
+    headerRight: <Icon 
+      type='ionicon' 
+      name='ios-more'
+      style={{marginRight: 15}}
+      underlayColor='#EFEFF2'
+      size={26} 
+      onPress={navigation.state.params.more} 
+    />
   })
 
   constructor(props) {
     super(props)
-
     this.getData = this.getData.bind(this)
   }
 
@@ -39,6 +48,26 @@ export default class NovelDetailScreen extends React.PureComponent {
     iconHeart: iconHeart[0],
     segmentIndex: 'Information',
     selectedIndex: 0
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ more: this.more })
+  }
+
+  more = () => {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: ['Add to favorite', 'Open In Safari', 'Cancel'],
+      cancelButtonIndex: 2
+    }, (index) => {
+      if (index === 0) {
+        // TODO add to favorite
+        alert('Added to Favorite')
+      }
+      if (index === 1) {
+        const { page } = this.props.navigation.state.params
+        Linking.openURL(`https://www.baka-tsuki.org/project/index.php?title=${page}`)
+      }
+    })
   }
 
   async componentWillMount() {
@@ -57,7 +86,7 @@ export default class NovelDetailScreen extends React.PureComponent {
       {...prevState, refreshing: true}
     ))
     const { page } = this.props.navigation.state.params
-    
+
     const fetched = await fetch(
       `https://api.azsiaz.tech/title/query/?title=${encodeURIComponent(page)}`
     )
