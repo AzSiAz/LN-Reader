@@ -23,7 +23,7 @@ platform :ios do
         clean: true,
         project: './ios/LNReader.xcodeproj',
         include_bitcode: true)
-        pilot(skip_submission: true)
+        pilot()
         clean_build_artifacts
         commit_version_bump(message: 'Bump build', xcodeproj: './ios/LNReader.xcodeproj')
         push_to_git_remote
