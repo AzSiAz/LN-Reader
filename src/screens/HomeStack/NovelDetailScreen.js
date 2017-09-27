@@ -10,9 +10,11 @@ import {
   RefreshControl,
   ActionSheetIOS,
   Linking,
-  SectionList
+  SectionList,
+  FlatList
 } from 'react-native'
-import { Icon, Divider, ListItem } from 'react-native-elements'
+import { Icon, Divider, ListItem, List } from 'react-native-elements'
+import Accordion from 'react-native-collapsible/Accordion'
 
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
@@ -186,29 +188,46 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   _renderVolume = () => {
     const { tome } = this.state.novel
-    // style={{left: 18, right: 18}}
-    const data = tome.map((el, i) => {
-      return {
-        title: el.title,
-        data: el.tome.map((el, i) => {
-          return {
-            ...el,
-            key: i
-          }
-        })
-      }
-    })
 
     return (
       <View>
-        <SectionList
-          renderSectionHeader={({section}) => (
-            <View style={{left: 18, right: 18, marginTop: 15, marginBottom: 15}}>
+        <Accordion
+        sections={[...tome]}
+        renderHeader={(section) => {
+          return (
+            <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9'}}>
               <Text>{section.title}</Text>
             </View>
-          )}
-          renderItem={({item}) => <ListItem key={item.key} avatar={item.cover} title={item.title}/>}
-          sections={data}
+          )
+        }}
+        renderContent={(section) => {
+          return (
+            <List style={{paddingTop: 0}}>
+              <Accordion
+                sections={[...section.tome]}
+                renderHeader={(section) => {
+                  return (
+                    <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7'}}>
+                      <Text numberOfLines={5}>{section.title}</Text>
+                    </View>
+                  )
+                }}
+                renderContent={(section) => {
+                  return section.chapters.map((el, i) => {
+                    return (
+                      <ListItem 
+                        titleNumberOfLines={5}
+                        title={el.title}
+                        key={i} 
+                        onPress={this._onChapterPress.bind(null, el)}
+                      />
+                    )
+                  })
+                }}
+              />
+            </List>
+          )
+        }}
         />
       </View>
     )
@@ -288,8 +307,14 @@ export default class NovelDetailScreen extends React.PureComponent {
     ))
   }
 
-  _onChapterPress = () => {
+  _onChapterPress = (chapter) => {
     const { navigate } = this.props.navigation
+
+    navigate('Reading', {
+      page: chapter.page,
+      link: chapter.link,
+      title: chapter.title
+    })
   }
 
 }

@@ -1,38 +1,21 @@
 import React from 'react'
-import { TabNavigator } from 'react-navigation'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { StackNavigator } from 'react-navigation'
 
-import HomeStack from './HomeStack'
-import SettingsStack from './SettingsStack'
+import tabNavigator from './tabNavigator'
+import ReadingScreen from './ReadingScreen'
 
 
-const tabNavigator = TabNavigator({
-  HomeStack: {
-    screen: HomeStack, 
-    navigationOptions: {
-      tabBarLabel: 'Novel List',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon
-          name='ios-list'
-          size={30}
-          color={tintColor}
-        />
-      ),
-    }
+
+const navigator = StackNavigator({
+  Tab: {
+    screen: tabNavigator,
   },
-  SettingsStack: {
-    screen: SettingsStack, 
-    navigationOptions: {
-      tabBarLabel: 'Settings',
-      tabBarIcon: ({ tintColor }) => (
-        <Icon
-          name='ios-settings'
-          size={30}
-          color={tintColor}
-        />
-      ),
-    }
+  Reading: {
+    screen: ReadingScreen,
   }
+},{
+    mode: 'modal',
+    headerMode: 'none'
 })
 
-export default tabNavigator
+export default navigator

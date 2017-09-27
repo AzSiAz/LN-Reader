@@ -7,7 +7,7 @@ import {
 import Info from 'react-native-device-info'
 import codePush from 'react-native-code-push'
 
-import TabNavigator from './screens'
+import Navigator from './screens'
 import IntroComponent from './components/IntroComponent'
 
 class LNReader extends Component {
@@ -63,7 +63,7 @@ class LNReader extends Component {
     if (isFetching) return null
     if (showInfo) return <IntroComponent hideIntro={this.hideIntro} />
 
-    return <TabNavigator />
+    return <Navigator />
   }
 }
 

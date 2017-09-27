@@ -5,7 +5,7 @@ import NovelDetailScreen from './NovelDetailScreen'
 
 const HomeStack = StackNavigator({
   NovelScreen: { screen: NovelScreen },
-  NovelDetailScreen: { screen: NovelDetailScreen }
+  NovelDetailScreen: { screen: NovelDetailScreen },
 })
 
 export default HomeStack
