@@ -109,15 +109,23 @@ export default class NovelDetailScreen extends React.PureComponent {
     if (isFetching) return <LoadingComponent name={params.title} />
     if (error) return <ErrorComponent error={error} />
 
-    const completed = ((novel) => {
+    const volumeNumber = ((novel) => {
       // const numberSerie = novel.tome.length
-      let completed = 0
-      for (let serie of novel.tome) {
-        for (let tome of serie.tome) {
-          completed++
+      const oneShot = novel.tome[0].tome[0].page !== undefined ? true : false
+      let volume = 0
+
+      if (!oneShot)
+        for (let serie of novel.tome) {
+          for (let tome of serie.tome) {
+            volume++
+          }
         }
-      }
-      return completed
+      else 
+        for(let volume of novel.tome) {
+          volume++
+        }
+
+      return volume
     })(novel)
 
     return (
@@ -147,7 +155,7 @@ export default class NovelDetailScreen extends React.PureComponent {
               </View>
               <View>
                 <Text>Status: {novel.status}</Text>
-                <Text>Volume number: {completed}</Text>
+                <Text>Volume number: {volumeNumber}</Text>
               </View>
             </View>
           </View>
