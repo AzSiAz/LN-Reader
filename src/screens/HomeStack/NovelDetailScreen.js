@@ -112,20 +112,20 @@ export default class NovelDetailScreen extends React.PureComponent {
     const volumeNumber = ((novel) => {
       // const numberSerie = novel.tome.length
       const oneShot = novel.tome[0].tome[0].page !== undefined ? true : false
-      let volume = 0
+      let volumeNumber = 0
 
       if (!oneShot)
         for (let serie of novel.tome) {
           for (let tome of serie.tome) {
-            volume++
+            volumeNumber++
           }
         }
       else 
         for(let volume of novel.tome) {
-          volume++
+          volumeNumber++
         }
 
-      return volume
+      return volumeNumber
     })(novel)
 
     return (
