@@ -50,7 +50,9 @@ export default class NovelDetailScreen extends React.PureComponent {
     image: {},
     iconHeart: iconHeart[0],
     segmentIndex: 'Information',
-    selectedIndex: 0
+    selectedIndex: 0,
+    oneShot: false,
+    volumeNumber: 0
   }
 
   componentDidMount() {
@@ -95,23 +97,15 @@ export default class NovelDetailScreen extends React.PureComponent {
     )
     const json = await fetched.json()
 
-    this.setState((prevState) => ({
-      ...prevState, novel: json, 
-      isFetching: false,
-      refreshing: false
-    }))
-  }
+    const correctCat = json.categories.map((el) => {
+      if (el.toLowerCase().includes('genre'))
+          return el.replace('Genre -', '')
+    })
+    const filteredCat = correctCat.filter(el => typeof el === 'string')
 
-  render() {
-    const { params } = this.props.navigation.state
-    const { isFetching, novel, error, iconHeart, selectedIndex } = this.state
-
-    if (isFetching) return <LoadingComponent name={params.title} />
-    if (error) return <ErrorComponent error={error} />
-
-    const volumeNumber = ((novel) => {
-      // const numberSerie = novel.tome.length
-      const oneShot = novel.tome[0].tome[0].page !== undefined ? true : false
+    json.categories = filteredCat
+    const oneShot = json.tome[0].tome[0].page !== undefined ? true : false
+    const volumeNumber = ((novel, oneShot) => {
       let volumeNumber = 0
 
       if (!oneShot)
@@ -126,7 +120,31 @@ export default class NovelDetailScreen extends React.PureComponent {
         }
 
       return volumeNumber
-    })(novel)
+    })(json, oneShot)
+
+    this.setState((prevState) => ({
+      ...prevState, novel: json,
+      isFetching: false,
+      refreshing: false,
+      oneShot: oneShot,
+      volumeNumber: volumeNumber
+    }))
+  }
+
+  render() {
+    const { params } = this.props.navigation.state
+    const { 
+      isFetching,
+      novel,
+      error,
+      iconHeart,
+      selectedIndex,
+      volumeNumber,
+      oneShot 
+    } = this.state
+
+    if (isFetching) return <LoadingComponent name={params.title} />
+    if (error) return <ErrorComponent error={error} />
 
     return (
       <ScrollView style={{ backgroundColor: 'white' }} refreshControl={this._renderRefreshControl()} >
@@ -229,10 +247,7 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   _renderVolume = () => {
     const { tome } = this.state.novel
-
-    const oneShot = ((tome) => {
-      return tome[0].tome[0].page !== undefined ? true : false
-    })(tome)
+    const { oneShot } = this.state
 
     if (oneShot) return this._renderOneShot(tome)
     else
@@ -283,22 +298,16 @@ export default class NovelDetailScreen extends React.PureComponent {
   _renderInformation = () => {
     const { categories, synopsis } = this.state.novel
 
-    const correctCat = categories.map((el) => {
-      if (el.toLowerCase().includes('genre'))
-          return el.replace('Genre -', '')
-    })
-    const filteredCat = correctCat.filter(el => typeof el === 'string')
-
     return (
       <View>
-        {filteredCat.length === 0 ? (
+        {categories.length === 0 ? (
           <View style={{alignItems: 'center', flex: 1, marginBottom: 5}}>
             <Text>No categories found</Text>
           </View>
         ) :
         (
           <View style={{marginLeft: 10, marginRight: 10}}>
-            <CategorieList categories={filteredCat} />
+            <CategorieList categories={categories} />
           </View>
         )}
         <Divider />
