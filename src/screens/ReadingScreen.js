@@ -16,7 +16,7 @@ class ReadingScreen extends React.PureComponent {
             name='ios-more'
             style={{marginRight: 15}}
             underlayColor='#EFEFF2'
-            size={26} 
+            size={36} 
             onPress={navigation.state.params.more} 
         />,
         headerLeft: <Icon
@@ -24,7 +24,7 @@ class ReadingScreen extends React.PureComponent {
             name='ios-close'
             style={{marginLeft: 15}}
             underlayColor='#EFEFF2'
-            size={26} 
+            size={36} 
             onPress={navigation.state.params.back} 
         />
     })

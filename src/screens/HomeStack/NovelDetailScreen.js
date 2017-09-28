@@ -32,7 +32,7 @@ export default class NovelDetailScreen extends React.PureComponent {
       name='ios-more'
       style={{marginRight: 15}}
       underlayColor='#EFEFF2'
-      size={26} 
+      size={36} 
       onPress={navigation.state.params.more} 
     />
   })
@@ -186,9 +186,7 @@ export default class NovelDetailScreen extends React.PureComponent {
     return this._renderVolume()
   }
 
-  _renderVolume = () => {
-    const { tome } = this.state.novel
-
+  _renderOneShot = (tome) => {
     return (
       <View>
         <Accordion
@@ -203,34 +201,75 @@ export default class NovelDetailScreen extends React.PureComponent {
         renderContent={(section) => {
           return (
             <List style={{paddingTop: 0}}>
-              <Accordion
-                sections={[...section.tome]}
-                renderHeader={(section) => {
-                  return (
-                    <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7'}}>
-                      <Text numberOfLines={5}>{section.title}</Text>
-                    </View>
-                  )
-                }}
-                renderContent={(section) => {
-                  return section.chapters.map((el, i) => {
-                    return (
-                      <ListItem 
-                        titleNumberOfLines={5}
-                        title={el.title}
-                        key={i} 
-                        onPress={this._onChapterPress.bind(null, el)}
-                      />
-                    )
-                  })
-                }}
-              />
+              {section.tome.map((el, i) => {
+                return (
+                  <ListItem 
+                    titleNumberOfLines={5}
+                    title={el.title}
+                    key={i}
+                    onPress={this._onChapterPress.bind(null, el)}
+                  />
+                )
+              })}
             </List>
           )
         }}
         />
       </View>
     )
+  }
+
+  _renderVolume = () => {
+    const { tome } = this.state.novel
+
+    const oneShot = ((tome) => {
+      return tome[0].tome[0].page !== undefined ? true : false
+    })(tome)
+
+    if (oneShot) return this._renderOneShot(tome)
+    else
+      return (
+        <View>
+          <Accordion
+          sections={[...tome]}
+          renderHeader={(section) => {
+            return (
+              <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9'}}>
+                <Text>{section.title}</Text>
+              </View>
+            )
+          }}
+          renderContent={(section) => {
+            return (
+              <List style={{paddingTop: 0}}>
+                <Accordion
+                  sections={[...section.tome]}
+                  renderHeader={(section) => {
+                    return (
+                      <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7'}}>
+                        <Text numberOfLines={5}>{section.title}</Text>
+                      </View>
+                    )
+                  }}
+                  renderContent={(section) => {
+                    return section.chapters.map((el, i) => {
+                      return (
+                        <ListItem 
+                          titleNumberOfLines={5}
+                          title={el.title}
+                          key={i} 
+                          onPress={this._onChapterPress.bind(null, el)}
+                        />
+                      )
+                    })
+                  }}
+                />
+              </List>
+            )
+          }}
+          />
+        </View>
+      )
   }
 
   _renderInformation = () => {
