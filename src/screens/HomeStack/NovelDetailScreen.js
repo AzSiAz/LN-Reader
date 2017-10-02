@@ -19,7 +19,7 @@ import Accordion from 'react-native-collapsible/Accordion'
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
 
-import CategorieList from './../../components/novel/Categorie/CategorieList'
+import { CategorieList } from './../../components/novel'
 
 
 iconHeart = [ 'md-heart-outline', 'md-heart' ]
@@ -43,6 +43,7 @@ export default class NovelDetailScreen extends React.PureComponent {
   }
 
   state = {
+    favorite: false,
     novel: {},
     isFetching: true,
     refreshing: false,
@@ -60,13 +61,13 @@ export default class NovelDetailScreen extends React.PureComponent {
   }
 
   more = () => {
+    let str = this.state.favorite ? 'Remove From Favorite' : 'Add To Favorite'
     ActionSheetIOS.showActionSheetWithOptions({
-      options: ['Add to favorite', 'Open In Safari', 'Cancel'],
+      options: [str, 'Open In Safari', 'Cancel'],
       cancelButtonIndex: 2
     }, (index) => {
       if (index === 0) {
-        // TODO add to favorite
-        alert('Added to Favorite')
+        this._onHeartPress()
       }
       if (index === 1) {
         const { page } = this.props.navigation.state.params
@@ -357,9 +358,10 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   _onHeartPress = () => {
     // TODO remove or add fav
+    
     let name = (this.state.iconHeart === iconHeart[0]) ? iconHeart[1] : iconHeart[0]
     this.setState((prevState) => (
-      { ...prevState, iconHeart: name }
+      { ...prevState, iconHeart: name, favorite: !prevState.favorite }
     ))
   }
 

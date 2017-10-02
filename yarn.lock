@@ -3993,9 +3993,9 @@ react-native-elements@^0.17.0:
     react-native-side-menu "^1.0.2"
     react-native-tab-navigator "^0.3.4"
 
-react-native-render-html@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-render-html/-/react-native-render-html-2.1.0.tgz#dc2d709424f7c78a156cfe38dfd5abcbb2414d8b"
+react-native-render-html@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-render-html/-/react-native-render-html-3.1.0.tgz#5de702e23c244132fa0bcff97ab976d674bfff3c"
   dependencies:
     buffer "^4.5.1"
     events "^1.1.0"

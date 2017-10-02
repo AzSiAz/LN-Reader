@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ScrollView, WebView, AsyncStorage } from 'react-native'
+import { View, Text, ScrollView, WebView, AsyncStorage, Dimensions } from 'react-native'
 import { StackNavigator, NavigationActions } from 'react-navigation'
 import HTML from 'react-native-render-html'
 import { Icon } from 'react-native-elements'
@@ -118,10 +118,11 @@ class ReadingScreen extends React.PureComponent {
                 contentOffset={{x: 0, y: y}}
             >
                 <View style={{flex: 1, marginLeft: 15, marginRight: 15}}>
-                    <HTML 
+                    <HTML
                         html={this.state.html}
                         renderers={this._renderers}
-                        htmlStyles={this.htmlStyles}
+                        tagsStyles={this.htmlStyles}
+                        imagesMaxWidth={Dimensions.get('window').width * 0.9}
                     />
                 </View>
             </ScrollView>
