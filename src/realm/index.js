@@ -8,3 +8,13 @@
 //     "lastrevisedid": 503967,
 //     "pageid": 25797
 //   },
+
+import Realm from 'realm'
+
+import { CacheSchema } from './cache'
+import { ChapterSchema } from './chapter'
+import { NovelSchema, OneShotNovelSchema } from './novel'
+
+export default Realm.open({
+    schema: [ NovelSchema, OneShotNovelSchema, CacheSchema, ChapterSchema ]
+})

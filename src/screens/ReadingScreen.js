@@ -61,7 +61,7 @@ class ReadingScreen extends React.PureComponent {
         const { navigation } = this.props
         const { y } = this.state
 
-        await AsyncStorage.setItem(navigation.state.params.page, JSON.stringify({
+        await AsyncStorage.mergeItem(navigation.state.params.page, JSON.stringify({
             scrollPosition: y
         }))
 
@@ -115,9 +115,9 @@ class ReadingScreen extends React.PureComponent {
                 style={{backgroundColor:'white'}}
                 scrollEventThrottle={16}
                 onScroll={this._onScroll}
-                contentOffset={{x: 0, y: y}}
+                contentOffset={{ x: 0, y: y }}
             >
-                <View style={{flex: 1, marginLeft: 15, marginRight: 15}}>
+                <View style={{ flex: 1, marginLeft: 15, marginRight: 15 }}>
                     <HTML
                         html={this.state.html}
                         renderers={this._renderers}
