@@ -30,7 +30,7 @@ export default class NovelDetailScreen extends React.PureComponent {
     headerRight: <Icon 
       type='ionicon' 
       name='ios-more'
-      style={{marginRight: 15}}
+      style={{ marginRight: 15 }}
       underlayColor='#EFEFF2'
       size={36} 
       onPress={navigation.state.params.more} 
@@ -63,7 +63,7 @@ export default class NovelDetailScreen extends React.PureComponent {
   more = () => {
     let str = this.state.favorite ? 'Remove From Favorite' : 'Add To Favorite'
     ActionSheetIOS.showActionSheetWithOptions({
-      options: [str, 'Open In Safari', 'Cancel'],
+      options: [ str, 'Open In Safari', 'Cancel' ],
       cancelButtonIndex: 2
     }, (index) => {
       if (index === 0) {
@@ -149,7 +149,7 @@ export default class NovelDetailScreen extends React.PureComponent {
 
     return (
       <ScrollView style={{ backgroundColor: 'white' }} refreshControl={this._renderRefreshControl()} >
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <View style={styles.image}>
               <Image
@@ -158,8 +158,8 @@ export default class NovelDetailScreen extends React.PureComponent {
                 resizeMode='contain'
               />
             </View>
-            <View style={{flex: 1, flexDirection: 'column'}}>
-              <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text style={styles.title} numberOfLines={3}>
                   {novel.title}
                 </Text>
@@ -188,7 +188,7 @@ export default class NovelDetailScreen extends React.PureComponent {
               />
             </View>
             <Divider />
-            <View style={{paddingTop: 5}}>
+            <View style={{ paddingTop: 5 }}>
               {this._renderSegment()}
             </View>
           </View>
@@ -220,14 +220,14 @@ export default class NovelDetailScreen extends React.PureComponent {
         sections={[...tome]}
         renderHeader={(section) => {
           return (
-            <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9'}}>
+            <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9' }}>
               <Text>{section.title}</Text>
             </View>
           )
         }}
         renderContent={(section) => {
           return (
-            <List style={{paddingTop: 0}}>
+            <List style={{ paddingTop: 0 }}>
               {section.tome.map((el, i) => {
                 return (
                   <ListItem 
@@ -258,7 +258,7 @@ export default class NovelDetailScreen extends React.PureComponent {
           sections={[...tome]}
           renderHeader={(section) => {
             return (
-              <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9'}}>
+              <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9' }}>
                 <Text>{section.title}</Text>
               </View>
             )
@@ -270,7 +270,7 @@ export default class NovelDetailScreen extends React.PureComponent {
                   sections={[...section.tome]}
                   renderHeader={(section) => {
                     return (
-                      <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7'}}>
+                      <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7' }}>
                         <Text numberOfLines={5}>{section.title}</Text>
                       </View>
                     )
@@ -302,12 +302,12 @@ export default class NovelDetailScreen extends React.PureComponent {
     return (
       <View>
         {categories.length === 0 ? (
-          <View style={{alignItems: 'center', flex: 1, marginBottom: 5}}>
+          <View style={{ alignItems: 'center', flex: 1, marginBottom: 5 }}>
             <Text>No categories found</Text>
           </View>
         ) :
         (
-          <View style={{marginLeft: 10, marginRight: 10}}>
+          <View style={{ marginLeft: 10, marginRight: 10 }}>
             <CategorieList categories={categories} />
           </View>
         )}
@@ -332,11 +332,11 @@ export default class NovelDetailScreen extends React.PureComponent {
     const { synopsis } = this.state.novel
 
     return (
-      <View style={{marginLeft: 18, marginRight: 18, marginTop: 5, marginBottom: 5}}>
-        <Text style={{fontSize: 18}}>
+      <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5, marginBottom: 5 }}>
+        <Text style={{ fontSize: 18 }}>
           Synopsis:
         </Text>
-        <Text style={{marginTop: 5}}>
+        <Text style={{ marginTop: 5 }}>
           {synopsis}
         </Text>
       </View>
@@ -347,11 +347,11 @@ export default class NovelDetailScreen extends React.PureComponent {
     const { updateDate, author } = this.state.novel
 
     return (
-      <View style={{marginLeft: 18, marginRight: 18, marginTop: 5}}>
-        <Text style={{fontSize: 18, marginBottom: 5}}>Novel Information:</Text>
-        <Text style={{marginBottom: 5}}>Source: Baka-Tsuki</Text>
-        <Text style={{marginBottom: 5}}>Update Date: {updateDate}</Text>
-        <Text style={{marginBottom: 5}}>Author: {author}</Text>
+      <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5 }}>
+        <Text style={{ fontSize: 18, marginBottom: 5 }}>Novel Information:</Text>
+        <Text style={{ marginBottom: 5 }}>Source: Baka-Tsuki</Text>
+        <Text style={{ marginBottom: 5 }}>Update Date: {updateDate}</Text>
+        <Text style={{ marginBottom: 5 }}>Author: {author}</Text>
       </View>
     )
   }
@@ -368,11 +368,16 @@ export default class NovelDetailScreen extends React.PureComponent {
   _onChapterPress = (chapter) => {
     const { navigate } = this.props.navigation
 
-    navigate('Reading', {
-      page: chapter.page,
-      link: chapter.link,
-      title: chapter.title
-    })
+    if (chapter.linktype === 'internal') {
+      navigate('Reading', {
+        page: chapter.page,
+        link: chapter.link,
+        title: chapter.title
+      })
+    }
+    else {
+      Linking.openURL(chapter.link)
+    }
   }
 
 }
