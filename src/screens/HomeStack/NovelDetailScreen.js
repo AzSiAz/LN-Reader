@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements'
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
 import { Novel } from './../../components/novel'
+import { getNovelJSON } from './../../api'
 
 const iconHeart = ['md-heart-outline', 'md-heart']
 
@@ -31,7 +32,6 @@ export default class NovelDetailScreen extends React.PureComponent {
     error: undefined,
     image: {},
     iconHeart: iconHeart[0],
-    oneShot: false,
     volumeNumber: 0
   }
 
@@ -74,42 +74,13 @@ export default class NovelDetailScreen extends React.PureComponent {
     this.setState(prevState => ({ ...prevState, refreshing: true }))
     const { page } = this.props.navigation.state.params
 
-    const fetched = await fetch(
-      `https://btapi.herokuapp.com/api?title=${encodeURIComponent(page)}`
-    )
-    const json = await fetched.json()
-
-    const correctCat = json.categories.map(el => {
-      if (el.toLowerCase().includes('genre')) return el.replace('Genre -', '')
-    })
-    const filteredCat = correctCat.filter(el => typeof el === 'string')
-
-    json.categories = filteredCat
-    let oneShot = json.one_off
-
-    const volumeNumber = ((novel, oneShot) => {
-      let volumeNumber = 0
-
-      if (!oneShot)
-        for (let serie of novel.series) {
-          for (let book of serie.books) {
-            volumeNumber++
-          }
-        }
-      else
-        for (let volume of novel.series) {
-          volumeNumber++
-        }
-
-      return volumeNumber
-    })(json, oneShot)
+    const { json, volumeNumber } = await getNovelJSON(page)
 
     this.setState(prevState => ({
       ...prevState,
       novel: json,
       isFetching: false,
       refreshing: false,
-      oneShot: oneShot,
       volumeNumber: volumeNumber
     }))
   }

@@ -13,6 +13,7 @@ import { Icon } from 'react-native-elements'
 
 import LoadingComponent from './../components/LoadingComponent'
 import ErrorComponent from './../components/ErrorComponent'
+import { getReaderPage } from './../api'
 
 class ReadingScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -89,10 +90,7 @@ class ReadingScreen extends React.PureComponent {
     try {
       const { page } = this.props.navigation.state.params
 
-      const fetched = await fetch(
-        `https://btapi.herokuapp.com/api/page?title=${page}`
-      )
-      const html = await fetched.text()
+      const html = await getReaderPage(page)
 
       this.setState(prevState => {
         return { ...prevState, html: html, isFetching: false }
@@ -104,14 +102,12 @@ class ReadingScreen extends React.PureComponent {
     }
   }
 
-  _renderers = {}
-
   htmlStyles = {
     br: {
       display: 'none'
     },
     p: {
-      marginTop: 5,
+      marginTop: 10,
       marginBottom: 0
     }
   }
@@ -133,7 +129,6 @@ class ReadingScreen extends React.PureComponent {
         <View style={{ flex: 1, marginLeft: 15, marginRight: 15 }}>
           <HTML
             html={this.state.html}
-            renderers={this._renderers}
             tagsStyles={this.htmlStyles}
             imagesMaxWidth={Dimensions.get('window').width * 0.9}
           />

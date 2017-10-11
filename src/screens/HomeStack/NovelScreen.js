@@ -13,6 +13,8 @@ import { ListItem, SearchBar } from 'react-native-elements'
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
 
+import { getEnglishNovelList } from '../../api'
+
 export default class NovelScreen extends React.PureComponent {
   static navigationOptions = {
     title: 'Novel List', // headerStyle: {},
@@ -33,15 +35,12 @@ export default class NovelScreen extends React.PureComponent {
 
   getData = async () => {
     try {
-      const fetched = await fetch(
-        'https://btapi.herokuapp.com/api/category?type=LIGHT_NOVEL&language=English'
-      )
-      const json = await fetched.json()
+      const { titles } = await getEnglishNovelList()
 
       this.setState(prevState => {
         return {
           ...prevState,
-          novelList: json.titles,
+          novelList: titles,
           isFetching: false,
           refreshing: false
         }
