@@ -423,7 +423,6 @@ const styles = StyleSheet.create({
     top: 15,
     flex: 1,
     height: 150,
-    left: -10,
     right: 10
   },
   image: {
