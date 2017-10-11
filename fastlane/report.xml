@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="00: Verifying required fastlane version" time="0.002203">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="01: ensure_git_branch" time="0.010014">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="02: ensure_git_status_clean" time="0.015997">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="03: git_pull" time="2.725101">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="04: Switch to ios certificates lane" time="0.003636">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="05: match" time="3.347093">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="06: match" time="4.123684">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="07: increment_build_number" time="1.131594">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="08: gym" time="288.145723">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="09: pilot" time="115.644498">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: clean_build_artifacts" time="0.00841">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="11: commit_version_bump" time="0.250179">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="12: push_to_git_remote" time="3.280966">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

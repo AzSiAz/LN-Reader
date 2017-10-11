@@ -1,12 +1,12 @@
 import React from 'react'
-import { 
+import {
   ScrollView,
-  StyleSheet, 
-  Text, 
-  Image, 
-  View, 
-  TouchableHighlight, 
-  SegmentedControlIOS, 
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  TouchableHighlight,
+  SegmentedControlIOS,
   RefreshControl,
   ActionSheetIOS,
   Linking,
@@ -21,20 +21,21 @@ import ErrorComponent from './../../components/ErrorComponent'
 
 import { CategorieList } from './../../components/novel'
 
-
-iconHeart = [ 'md-heart-outline', 'md-heart' ]
+iconHeart = ['md-heart-outline', 'md-heart']
 
 export default class NovelDetailScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
-    headerRight: <Icon 
-      type='ionicon' 
-      name='ios-more'
-      style={{ marginRight: 15 }}
-      underlayColor='#EFEFF2'
-      size={36} 
-      onPress={navigation.state.params.more} 
-    />
+    headerRight: (
+      <Icon
+        type="ionicon"
+        name="ios-more"
+        style={{ marginRight: 15 }}
+        underlayColor="#EFEFF2"
+        size={36}
+        onPress={navigation.state.params.more}
+      />
+    )
   })
 
   constructor(props) {
@@ -62,69 +63,72 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   more = () => {
     let str = this.state.favorite ? 'Remove From Favorite' : 'Add To Favorite'
-    ActionSheetIOS.showActionSheetWithOptions({
-      options: [ str, 'Open In Safari', 'Cancel' ],
-      cancelButtonIndex: 2
-    }, (index) => {
-      if (index === 0) {
-        this._onHeartPress()
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [str, 'Open In Safari', 'Cancel'],
+        cancelButtonIndex: 2
+      },
+      index => {
+        if (index === 0) {
+          this._onHeartPress()
+        }
+        if (index === 1) {
+          const { page } = this.props.navigation.state.params
+          Linking.openURL(
+            `https://www.baka-tsuki.org/project/index.php?title=${page}`
+          )
+        }
       }
-      if (index === 1) {
-        const { page } = this.props.navigation.state.params
-        Linking.openURL(`https://www.baka-tsuki.org/project/index.php?title=${page}`)
-      }
-    })
+    )
   }
 
   async componentWillMount() {
     try {
       await this.getData()
-    }
-    catch(e) {
-      this.setState((prevState) => {
+    } catch (e) {
+      this.setState(prevState => {
         return { ...prevState, error: e.message, isFetching: false }
       })
     }
   }
 
   async getData() {
-    this.setState((prevState) => (
-      {...prevState, refreshing: true}
-    ))
+    this.setState(prevState => ({ ...prevState, refreshing: true }))
     const { page } = this.props.navigation.state.params
 
     const fetched = await fetch(
-      `https://api.azsiaz.tech/title/query/?title=${encodeURIComponent(page)}`
+      `https://btapi.herokuapp.com/api?title=${encodeURIComponent(page)}`
     )
     const json = await fetched.json()
 
-    const correctCat = json.categories.map((el) => {
-      if (el.toLowerCase().includes('genre'))
-          return el.replace('Genre -', '')
+    const correctCat = json.categories.map(el => {
+      if (el.toLowerCase().includes('genre')) return el.replace('Genre -', '')
     })
     const filteredCat = correctCat.filter(el => typeof el === 'string')
 
     json.categories = filteredCat
-    const oneShot = json.tome[0].tome[0].page !== undefined ? true : false
+    let oneShot = json.series[0].books[0].page !== undefined ? true : false
+    alert(oneShot)
     const volumeNumber = ((novel, oneShot) => {
       let volumeNumber = 0
 
       if (!oneShot)
-        for (let serie of novel.tome) {
-          for (let tome of serie.tome) {
+        for (let serie of novel.series) {
+          for (let book of serie.books) {
             volumeNumber++
           }
         }
-      else 
-        for(let volume of novel.tome) {
+      else
+        for (let volume of novel.series) {
           volumeNumber++
         }
 
       return volumeNumber
     })(json, oneShot)
 
-    this.setState((prevState) => ({
-      ...prevState, novel: json,
+    this.setState(prevState => ({
+      ...prevState,
+      novel: json,
       isFetching: false,
       refreshing: false,
       oneShot: oneShot,
@@ -134,28 +138,31 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   render() {
     const { params } = this.props.navigation.state
-    const { 
+    const {
       isFetching,
       novel,
       error,
       iconHeart,
       selectedIndex,
       volumeNumber,
-      oneShot 
+      oneShot
     } = this.state
 
     if (isFetching) return <LoadingComponent name={params.title} />
     if (error) return <ErrorComponent error={error} />
 
     return (
-      <ScrollView style={{ backgroundColor: 'white' }} refreshControl={this._renderRefreshControl()} >
+      <ScrollView
+        style={{ backgroundColor: 'white' }}
+        refreshControl={this._renderRefreshControl()}
+      >
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <View style={styles.image}>
               <Image
                 style={{ width: 150, height: 150 }}
                 source={{ uri: novel.cover }}
-                resizeMode='contain'
+                resizeMode="contain"
               />
             </View>
             <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -164,11 +171,11 @@ export default class NovelDetailScreen extends React.PureComponent {
                   {novel.title}
                 </Text>
                 <Icon
-                  type='ionicon' 
-                  style={styles.heartIcon} 
-                  name={iconHeart} 
+                  type="ionicon"
+                  style={styles.heartIcon}
+                  name={iconHeart}
                   size={26}
-                  underlayColor='white'
+                  underlayColor="white"
                   onPress={this._onHeartPress}
                 />
               </View>
@@ -180,17 +187,22 @@ export default class NovelDetailScreen extends React.PureComponent {
           </View>
           <View style={{ paddingTop: 25 }}>
             <Divider />
-            <View style={{ paddingTop: 5, marginLeft: 10, marginRight: 10, paddingBottom: 5 }}>
-              <SegmentedControlIOS 
+            <View
+              style={{
+                paddingTop: 5,
+                marginLeft: 10,
+                marginRight: 10,
+                paddingBottom: 5
+              }}
+            >
+              <SegmentedControlIOS
                 selectedIndex={selectedIndex}
-                values={[ 'Information', 'Volume' ]}
-                onValueChange={(val) => this.setState({segmentIndex: val})}
+                values={['Information', 'Volume']}
+                onValueChange={val => this.setState({ segmentIndex: val })}
               />
             </View>
             <Divider />
-            <View style={{ paddingTop: 5 }}>
-              {this._renderSegment()}
-            </View>
+            <View style={{ paddingTop: 5 }}>{this._renderSegment()}</View>
           </View>
         </View>
       </ScrollView>
@@ -213,84 +225,102 @@ export default class NovelDetailScreen extends React.PureComponent {
     return this._renderVolume()
   }
 
-  _renderOneShot = (tome) => {
+  _renderOneShot = series => {
     return (
       <View>
         <Accordion
-        sections={[...tome]}
-        renderHeader={(section) => {
-          return (
-            <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9' }}>
-              <Text>{section.title}</Text>
-            </View>
-          )
-        }}
-        renderContent={(section) => {
-          return (
-            <List style={{ paddingTop: 0 }}>
-              {section.tome.map((el, i) => {
-                return (
-                  <ListItem 
-                    titleNumberOfLines={5}
-                    title={el.title}
-                    key={i}
-                    onPress={this._onChapterPress.bind(null, el)}
-                  />
-                )
-              })}
-            </List>
-          )
-        }}
+          sections={[...series]}
+          renderHeader={section => {
+            return (
+              <View
+                style={{
+                  borderWidth: 1,
+                  padding: 15,
+                  backgroundColor: '#2980b9'
+                }}
+              >
+                <Text>{section.title}</Text>
+              </View>
+            )
+          }}
+          renderContent={section => {
+            return (
+              <List style={{ paddingTop: 0 }}>
+                {section.chapters.map((el, i) => {
+                  return (
+                    <ListItem
+                      titleNumberOfLines={5}
+                      title={el.title}
+                      key={i}
+                      onPress={this._onChapterPress.bind(null, el)}
+                    />
+                  )
+                })}
+              </List>
+            )
+          }}
         />
       </View>
     )
   }
 
   _renderVolume = () => {
-    const { tome } = this.state.novel
+    const { series } = this.state.novel
     const { oneShot } = this.state
 
-    if (oneShot) return this._renderOneShot(tome)
+    if (oneShot) return this._renderOneShot(series)
     else
       return (
         <View>
           <Accordion
-          sections={[...tome]}
-          renderHeader={(section) => {
-            return (
-              <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#2980b9' }}>
-                <Text>{section.title}</Text>
-              </View>
-            )
-          }}
-          renderContent={(section) => {
-            return (
-              <List style={{paddingTop: 0}}>
-                <Accordion
-                  sections={[...section.tome]}
-                  renderHeader={(section) => {
-                    return (
-                      <View style={{ borderWidth: 1, padding: 15, backgroundColor: '#bdc3c7' }}>
-                        <Text numberOfLines={5}>{section.title}</Text>
-                      </View>
-                    )
+            sections={[...series]}
+            renderHeader={section => {
+              return (
+                <View
+                  style={{
+                    borderWidth: 1,
+                    padding: 15,
+                    backgroundColor: '#2980b9'
                   }}
-                  renderContent={(section) => {
-                    return section.chapters.map((el, i) => {
+                >
+                  <Text>{section.title}</Text>
+                </View>
+              )
+            }}
+            renderContent={section => {
+              return (
+                <List style={{ paddingTop: 0 }}>
+                  <Accordion
+                    sections={[...section.books]}
+                    renderHeader={section => {
                       return (
-                        <ListItem 
-                          titleNumberOfLines={5}
-                          title={el.title}
-                          key={i} 
-                          onPress={this._onChapterPress.bind(null, el)}
-                        />
+                        <View
+                          style={{
+                            borderWidth: 1,
+                            padding: 15,
+                            backgroundColor: '#bdc3c7'
+                          }}
+                        >
+                          <Text numberOfLines={5}>{section.title}</Text>
+                        </View>
                       )
-                    })
-                  }}
-                />
-              </List>
-            )
-          }}
+                    }}
+                    renderContent={section => {
+                      return section.chapters.map((el, i) => {
+                        return (
+                          <ListItem
+                            titleNumberOfLines={5}
+                            title={el.title}
+                            key={i}
+                            onPress={this._onChapterPress.bind(null, el)}
+                          />
+                        )
+                      })
+                    }}
+                  />
+                </List>
+              )
+            }}
           />
         </View>
       )
@@ -305,8 +335,7 @@ export default class NovelDetailScreen extends React.PureComponent {
           <View style={{ alignItems: 'center', flex: 1, marginBottom: 5 }}>
             <Text>No categories found</Text>
           </View>
-        ) :
-        (
+        ) : (
           <View style={{ marginLeft: 10, marginRight: 10 }}>
             <CategorieList categories={categories} />
           </View>
@@ -332,13 +361,16 @@ export default class NovelDetailScreen extends React.PureComponent {
     const { synopsis } = this.state.novel
 
     return (
-      <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5, marginBottom: 5 }}>
-        <Text style={{ fontSize: 18 }}>
-          Synopsis:
-        </Text>
-        <Text style={{ marginTop: 5 }}>
-          {synopsis}
-        </Text>
+      <View
+        style={{
+          marginLeft: 18,
+          marginRight: 18,
+          marginTop: 5,
+          marginBottom: 5
+        }}
+      >
+        <Text style={{ fontSize: 18 }}>Synopsis:</Text>
+        <Text style={{ marginTop: 5 }}>{synopsis}</Text>
       </View>
     )
   }
@@ -348,7 +380,9 @@ export default class NovelDetailScreen extends React.PureComponent {
 
     return (
       <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5 }}>
-        <Text style={{ fontSize: 18, marginBottom: 5 }}>Novel Information:</Text>
+        <Text style={{ fontSize: 18, marginBottom: 5 }}>
+          Novel Information:
+        </Text>
         <Text style={{ marginBottom: 5 }}>Source: Baka-Tsuki</Text>
         <Text style={{ marginBottom: 5 }}>Update Date: {updateDate}</Text>
         <Text style={{ marginBottom: 5 }}>Author: {author}</Text>
@@ -358,14 +392,17 @@ export default class NovelDetailScreen extends React.PureComponent {
 
   _onHeartPress = () => {
     // TODO remove or add fav
-    
-    let name = (this.state.iconHeart === iconHeart[0]) ? iconHeart[1] : iconHeart[0]
-    this.setState((prevState) => (
-      { ...prevState, iconHeart: name, favorite: !prevState.favorite }
-    ))
+
+    let name =
+      this.state.iconHeart === iconHeart[0] ? iconHeart[1] : iconHeart[0]
+    this.setState(prevState => ({
+      ...prevState,
+      iconHeart: name,
+      favorite: !prevState.favorite
+    }))
   }
 
-  _onChapterPress = (chapter) => {
+  _onChapterPress = chapter => {
     const { navigate } = this.props.navigation
 
     if (chapter.linktype === 'internal') {
@@ -374,14 +411,11 @@ export default class NovelDetailScreen extends React.PureComponent {
         link: chapter.link,
         title: chapter.title
       })
-    }
-    else {
+    } else {
       Linking.openURL(chapter.link)
     }
   }
-
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -393,7 +427,7 @@ const styles = StyleSheet.create({
   },
   image: {
     maxWidth: 150,
-    maxHeight: 150,
+    maxHeight: 150
   },
   title: {
     height: 150,
