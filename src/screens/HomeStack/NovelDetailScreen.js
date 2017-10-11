@@ -23,11 +23,6 @@ export default class NovelDetailScreen extends React.PureComponent {
     )
   })
 
-  constructor(props) {
-    super(props)
-    this.getData = this.getData.bind(this)
-  }
-
   state = {
     favorite: false,
     novel: {},
@@ -75,7 +70,7 @@ export default class NovelDetailScreen extends React.PureComponent {
     }
   }
 
-  async getData() {
+  getData = async () => {
     this.setState(prevState => ({ ...prevState, refreshing: true }))
     const { page } = this.props.navigation.state.params
 
