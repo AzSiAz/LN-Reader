@@ -107,8 +107,8 @@ export default class NovelDetailScreen extends React.PureComponent {
     const filteredCat = correctCat.filter(el => typeof el === 'string')
 
     json.categories = filteredCat
-    let oneShot = json.series[0].books[0].page !== undefined ? true : false
-    alert(oneShot)
+    let oneShot = json.one_off
+
     const volumeNumber = ((novel, oneShot) => {
       let volumeNumber = 0
 
