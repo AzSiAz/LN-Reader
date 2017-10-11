@@ -24,7 +24,7 @@ class ReadingScreen extends React.PureComponent {
         name="ios-more"
         style={{ marginRight: 15 }}
         underlayColor="#EFEFF2"
-        size={36}
+        size={40}
         onPress={navigation.state.params.more}
       />
     ),
@@ -34,7 +34,7 @@ class ReadingScreen extends React.PureComponent {
         name="ios-close"
         style={{ marginLeft: 15 }}
         underlayColor="#EFEFF2"
-        size={36}
+        size={40}
         onPress={navigation.state.params.back}
       />
     )
