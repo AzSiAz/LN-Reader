@@ -106,6 +106,7 @@ export default class NovelDetailScreen extends React.PureComponent {
         volumeNumber={volumeNumber}
         refreshing={refreshing}
         _onChapterPress={this._onChapterPress}
+        _onHeartPress={this._onHeartPress}
       />
     )
   }

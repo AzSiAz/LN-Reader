@@ -22,7 +22,7 @@ export default class NovelComponent extends React.PureComponent {
   state = { segmentIndex: 'Information', selectedIndex: 0 }
 
   render() {
-    const { iconHeart, novel, volumeNumber } = this.props
+    const { iconHeart, novel, volumeNumber, _onHeartPress } = this.props
     const { segmentIndex, selectedIndex } = this.state
 
     return (
@@ -50,7 +50,7 @@ export default class NovelComponent extends React.PureComponent {
                   name={iconHeart}
                   size={26}
                   underlayColor="white"
-                  onPress={this._onHeartPress}
+                  onPress={_onHeartPress}
                 />
               </View>
               <View>
