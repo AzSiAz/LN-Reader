@@ -4,18 +4,22 @@ import { StackNavigator } from 'react-navigation'
 import tabNavigator from './tabNavigator'
 import ReadingScreen from './ReadingScreen'
 
-
-
-const navigator = StackNavigator({
-  Tab: {
-    screen: tabNavigator,
+const navigator = StackNavigator(
+  {
+    Tab: {
+      screen: tabNavigator
+    },
+    Reading: {
+      screen: ReadingScreen
+    }
   },
-  Reading: {
-    screen: ReadingScreen,
-  }
-},{
+  {
     mode: 'modal',
-    headerMode: 'none'
-})
+    headerMode: 'none',
+    navigationOptions: {
+      gesturesEnabled: false
+    }
+  }
+)
 
 export default navigator
