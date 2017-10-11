@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>16</string>
+	<string>17</string>
 	<key>CodePushDeploymentKey</key>
 	<string>d9mJ6jJ81Q4UT85t1r6VMPcdcF5Ca0ef217f-ddf5-4a3d-ae22-1a0787eeabd0</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -38,7 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
