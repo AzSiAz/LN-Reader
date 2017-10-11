@@ -5,7 +5,8 @@ import {
   FlatList,
   StyleSheet,
   StatusBar,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from 'react-native'
 import { ListItem, SearchBar } from 'react-native-elements'
 
@@ -14,21 +15,23 @@ import ErrorComponent from './../../components/ErrorComponent'
 
 export default class NovelScreen extends React.PureComponent {
   static navigationOptions = {
-    title: 'Novel List',
-    // headerStyle: {},
-    headerTitleStyle: {
-      color: 'black'
-    }
+    title: 'Novel List', // headerStyle: {},
+    headerTitleStyle: { color: 'black' }
   }
 
   state = {
     novelList: [],
     isFetching: true,
     search: '',
-    error: undefined
+    error: undefined,
+    refreshing: false
   }
 
   async componentWillMount() {
+    await this.getData()
+  }
+
+  getData = async () => {
     try {
       const fetched = await fetch(
         'https://btapi.herokuapp.com/api/category?type=LIGHT_NOVEL&language=English'
@@ -36,11 +39,21 @@ export default class NovelScreen extends React.PureComponent {
       const json = await fetched.json()
 
       this.setState(prevState => {
-        return { ...prevState, novelList: json.titles, isFetching: false }
+        return {
+          ...prevState,
+          novelList: json.titles,
+          isFetching: false,
+          refreshing: false
+        }
       })
     } catch (e) {
       this.setState(prevState => {
-        return { ...prevState, error: e.message, isFetching: false }
+        return {
+          ...prevState,
+          error: e.message,
+          isFetching: false,
+          refreshing: false
+        }
       })
     }
   }
@@ -57,7 +70,10 @@ export default class NovelScreen extends React.PureComponent {
     if (error) return <ErrorComponent error={error} />
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView
+        refreshControl={this._renderRefreshControl()}
+        style={styles.container}
+      >
         <SearchBar
           lightTheme
           clearIcon={clearIcon}
@@ -70,6 +86,15 @@ export default class NovelScreen extends React.PureComponent {
           renderItem={this._renderItem}
         />
       </ScrollView>
+    )
+  }
+
+  _renderRefreshControl = () => {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.getData}
+      />
     )
   }
 
