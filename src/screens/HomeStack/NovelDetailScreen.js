@@ -1,27 +1,12 @@
 import React from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  Image,
-  View,
-  TouchableHighlight,
-  SegmentedControlIOS,
-  RefreshControl,
-  ActionSheetIOS,
-  Linking,
-  SectionList,
-  FlatList
-} from 'react-native'
-import { Icon, Divider, ListItem, List } from 'react-native-elements'
-import Accordion from 'react-native-collapsible/Accordion'
+import { Linking, ActionSheetIOS } from 'react-native'
+import { Icon } from 'react-native-elements'
 
 import LoadingComponent from './../../components/LoadingComponent'
 import ErrorComponent from './../../components/ErrorComponent'
+import { Novel } from './../../components/novel'
 
-import { CategorieList } from './../../components/novel'
-
-iconHeart = ['md-heart-outline', 'md-heart']
+const iconHeart = ['md-heart-outline', 'md-heart']
 
 export default class NovelDetailScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -51,8 +36,6 @@ export default class NovelDetailScreen extends React.PureComponent {
     error: undefined,
     image: {},
     iconHeart: iconHeart[0],
-    segmentIndex: 'Information',
-    selectedIndex: 0,
     oneShot: false,
     volumeNumber: 0
   }
@@ -140,261 +123,32 @@ export default class NovelDetailScreen extends React.PureComponent {
     const { params } = this.props.navigation.state
     const {
       isFetching,
+      refreshing,
       novel,
       error,
       iconHeart,
-      selectedIndex,
-      volumeNumber,
-      oneShot
+      volumeNumber
     } = this.state
 
     if (isFetching) return <LoadingComponent name={params.title} />
     if (error) return <ErrorComponent error={error} />
 
     return (
-      <ScrollView
-        style={{ backgroundColor: 'white' }}
-        refreshControl={this._renderRefreshControl()}
-      >
-        <View style={{ flex: 1 }}>
-          <View style={styles.container}>
-            <View style={styles.image}>
-              <Image
-                style={{ width: 150, height: 150 }}
-                source={{ uri: novel.cover }}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
-                <Text style={styles.title} numberOfLines={3}>
-                  {novel.title}
-                </Text>
-                <Icon
-                  type="ionicon"
-                  style={styles.heartIcon}
-                  name={iconHeart}
-                  size={26}
-                  underlayColor="white"
-                  onPress={this._onHeartPress}
-                />
-              </View>
-              <View>
-                <Text>Status: {novel.status}</Text>
-                <Text>Volume number: {volumeNumber}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={{ paddingTop: 25 }}>
-            <Divider />
-            <View
-              style={{
-                paddingTop: 5,
-                marginLeft: 10,
-                marginRight: 10,
-                paddingBottom: 5
-              }}
-            >
-              <SegmentedControlIOS
-                selectedIndex={selectedIndex}
-                values={['Information', 'Volume']}
-                onValueChange={val => this.setState({ segmentIndex: val })}
-              />
-            </View>
-            <Divider />
-            <View style={{ paddingTop: 5 }}>{this._renderSegment()}</View>
-          </View>
-        </View>
-      </ScrollView>
-    )
-  }
-
-  _renderRefreshControl = () => {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.getData}
+      <Novel
+        iconHeart={iconHeart}
+        novel={novel}
+        volumeNumber={volumeNumber}
+        refreshing={refreshing}
+        _onChapterPress={this._onChapterPress}
       />
-    )
-  }
-
-  _renderSegment = () => {
-    if (this.state.segmentIndex === 'Information') {
-      return this._renderInformation()
-    }
-    return this._renderVolume()
-  }
-
-  _renderOneShot = series => {
-    return (
-      <View>
-        <Accordion
-          sections={[...series]}
-          renderHeader={section => {
-            return (
-              <View
-                style={{
-                  borderWidth: 1,
-                  padding: 15,
-                  backgroundColor: '#2980b9'
-                }}
-              >
-                <Text>{section.title}</Text>
-              </View>
-            )
-          }}
-          renderContent={section => {
-            return (
-              <List style={{ paddingTop: 0 }}>
-                {section.chapters.map((el, i) => {
-                  return (
-                    <ListItem
-                      titleNumberOfLines={5}
-                      title={el.title}
-                      key={i}
-                      onPress={this._onChapterPress.bind(null, el)}
-                    />
-                  )
-                })}
-              </List>
-            )
-          }}
-        />
-      </View>
-    )
-  }
-
-  _renderVolume = () => {
-    const { series } = this.state.novel
-    const { oneShot } = this.state
-
-    if (oneShot) return this._renderOneShot(series)
-    else
-      return (
-        <View>
-          <Accordion
-            sections={[...series]}
-            renderHeader={section => {
-              return (
-                <View
-                  style={{
-                    borderWidth: 1,
-                    padding: 15,
-                    backgroundColor: '#2980b9'
-                  }}
-                >
-                  <Text>{section.title}</Text>
-                </View>
-              )
-            }}
-            renderContent={section => {
-              return (
-                <List style={{ paddingTop: 0 }}>
-                  <Accordion
-                    sections={[...section.books]}
-                    renderHeader={section => {
-                      return (
-                        <View
-                          style={{
-                            borderWidth: 1,
-                            padding: 15,
-                            backgroundColor: '#bdc3c7'
-                          }}
-                        >
-                          <Text numberOfLines={5}>{section.title}</Text>
-                        </View>
-                      )
-                    }}
-                    renderContent={section => {
-                      return section.chapters.map((el, i) => {
-                        return (
-                          <ListItem
-                            titleNumberOfLines={5}
-                            title={el.title}
-                            key={i}
-                            onPress={this._onChapterPress.bind(null, el)}
-                          />
-                        )
-                      })
-                    }}
-                  />
-                </List>
-              )
-            }}
-          />
-        </View>
-      )
-  }
-
-  _renderInformation = () => {
-    const { categories, synopsis } = this.state.novel
-
-    return (
-      <View>
-        {categories.length === 0 ? (
-          <View style={{ alignItems: 'center', flex: 1, marginBottom: 5 }}>
-            <Text>No categories found</Text>
-          </View>
-        ) : (
-          <View style={{ marginLeft: 10, marginRight: 10 }}>
-            <CategorieList categories={categories} />
-          </View>
-        )}
-        <Divider />
-        {this._renderNextInformation()}
-      </View>
-    )
-  }
-
-  _renderNextInformation = () => {
-    return (
-      <View>
-        {this._renderSynopsis()}
-        <Divider />
-        {this._renderNovelInformation()}
-        <Divider />
-      </View>
-    )
-  }
-
-  _renderSynopsis = () => {
-    const { synopsis } = this.state.novel
-
-    return (
-      <View
-        style={{
-          marginLeft: 18,
-          marginRight: 18,
-          marginTop: 5,
-          marginBottom: 5
-        }}
-      >
-        <Text style={{ fontSize: 18 }}>Synopsis:</Text>
-        <Text style={{ marginTop: 5 }}>{synopsis}</Text>
-      </View>
-    )
-  }
-
-  _renderNovelInformation = () => {
-    const { updateDate, author } = this.state.novel
-
-    return (
-      <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5 }}>
-        <Text style={{ fontSize: 18, marginBottom: 5 }}>
-          Novel Information:
-        </Text>
-        <Text style={{ marginBottom: 5 }}>Source: Baka-Tsuki</Text>
-        <Text style={{ marginBottom: 5 }}>Update Date: {updateDate}</Text>
-        <Text style={{ marginBottom: 5 }}>Author: {author}</Text>
-      </View>
     )
   }
 
   _onHeartPress = () => {
     // TODO remove or add fav
-
     let name =
       this.state.iconHeart === iconHeart[0] ? iconHeart[1] : iconHeart[0]
+
     this.setState(prevState => ({
       ...prevState,
       iconHeart: name,
@@ -416,24 +170,3 @@ export default class NovelDetailScreen extends React.PureComponent {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    top: 15,
-    flex: 1,
-    height: 150,
-    right: 10
-  },
-  image: {
-    maxWidth: 150,
-    maxHeight: 150
-  },
-  title: {
-    height: 150,
-    width: 170
-  },
-  heartIcon: {
-    right: -20
-  }
-})
