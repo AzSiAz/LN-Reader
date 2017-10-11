@@ -83,12 +83,12 @@ class ReadingScreen extends React.PureComponent {
 
   goBack = async () => {
     const { navigation } = this.props
-    const { y } = this.state
+    // const { y } = this.state
 
     await AsyncStorage.mergeItem(
       navigation.state.params.page,
       JSON.stringify({
-        scrollPosition: y
+        scrollPosition: this.y
       })
     )
 
@@ -136,10 +136,7 @@ class ReadingScreen extends React.PureComponent {
 
   _onScroll = ev => {
     const y = ev.nativeEvent.contentOffset.y
-    this.setState(prevState => ({
-      ...prevState,
-      y: y
-    }))
+    this.y = y
   }
 }
 
