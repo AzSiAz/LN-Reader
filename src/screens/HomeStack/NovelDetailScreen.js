@@ -423,7 +423,8 @@ const styles = StyleSheet.create({
     top: 15,
     flex: 1,
     height: 150,
-    left: -10
+    left: -10,
+    right: 10
   },
   image: {
     maxWidth: 150,
@@ -434,6 +435,6 @@ const styles = StyleSheet.create({
     width: 170
   },
   heartIcon: {
-    right: -10
+    right: -20
   }
 })
