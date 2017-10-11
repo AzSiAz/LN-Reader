@@ -68,10 +68,12 @@ class ReadingScreen extends React.PureComponent {
         html: html,
         isFetching: false
       }))
-      this.setState(prevState => ({
-        ...prevState,
-        y: scrollPosition
-      }))
+      setTimeout(() => {
+        this.setState(prevState => ({
+          ...prevState,
+          y: scrollPosition
+        }))
+      }, 100)
     } catch (e) {
       this.setState(prevState => {
         return { ...prevState, error: e.message, isFetching: false }
