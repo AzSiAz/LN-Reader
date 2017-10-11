@@ -49,6 +49,7 @@ class ReadingScreen extends React.PureComponent {
 
   async componentDidMount() {
     const { navigation } = this.props
+    const { page } = this.props.navigation.state.params
 
     navigation.setParams({
       more: this.more,
@@ -56,15 +57,25 @@ class ReadingScreen extends React.PureComponent {
     })
 
     try {
-      const data = await AsyncStorage.getItem(navigation.state.params.page)
-      const scrollPosition = JSON.parse(data).scrollPosition
+      const html = await getReaderPage(page)
+      const data = await AsyncStorage.getItem(page)
 
+      const dataJSON = JSON.parse(data)
+      const scrollPosition = dataJSON ? dataJSON.scrollPosition : 0
+
+      this.setState(prevState => ({
+        ...prevState,
+        html: html,
+        isFetching: false
+      }))
       this.setState(prevState => ({
         ...prevState,
         y: scrollPosition
       }))
     } catch (e) {
-      console.log('No scrollPosition stored')
+      this.setState(prevState => {
+        return { ...prevState, error: e.message, isFetching: false }
+      })
     }
   }
 
@@ -84,22 +95,6 @@ class ReadingScreen extends React.PureComponent {
 
   more = () => {
     alert('More tapped')
-  }
-
-  async componentWillMount() {
-    try {
-      const { page } = this.props.navigation.state.params
-
-      const html = await getReaderPage(page)
-
-      this.setState(prevState => {
-        return { ...prevState, html: html, isFetching: false }
-      })
-    } catch (e) {
-      this.setState(prevState => {
-        return { ...prevState, error: e.message, isFetching: false }
-      })
-    }
   }
 
   htmlStyles = {
