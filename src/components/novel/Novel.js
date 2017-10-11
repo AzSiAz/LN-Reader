@@ -14,7 +14,9 @@ import {
 import { Icon, Divider, ListItem, List } from 'react-native-elements'
 import Accordion from 'react-native-collapsible/Accordion'
 
-import { CategorieList } from './index'
+import { CategorieList, NovelInformation, Synopsis } from './index'
+import { OneShotVolumeComponent } from './Volume/OneShot'
+import { NormalVolumeComponent } from './Volume/Normal'
 
 export default class NovelComponent extends React.PureComponent {
   state = { segmentIndex: 'Information', selectedIndex: 0 }
@@ -98,7 +100,7 @@ export default class NovelComponent extends React.PureComponent {
   }
 
   _renderInformation = () => {
-    const { categories, synopsis } = this.props.novel
+    const { categories } = this.props.novel
 
     return (
       <View>
@@ -118,85 +120,13 @@ export default class NovelComponent extends React.PureComponent {
   }
 
   _renderNextInformation = () => {
+    const { synopsis, date, author } = this.props.novel
     return (
       <View>
-        {this._renderSynopsis()}
+        <Synopsis synopsis={synopsis} />
         <Divider />
-        {this._renderNovelInformation()}
+        <NovelInformation updateDate={date} author={author} />
         <Divider />
-      </View>
-    )
-  }
-
-  _renderSynopsis = () => {
-    const { synopsis } = this.props.novel
-
-    return (
-      <View
-        style={{
-          marginLeft: 18,
-          marginRight: 18,
-          marginTop: 5,
-          marginBottom: 5
-        }}
-      >
-        <Text style={{ fontSize: 18 }}>Synopsis:</Text>
-        <Text style={{ marginTop: 5 }}>{synopsis}</Text>
-      </View>
-    )
-  }
-
-  _renderNovelInformation = () => {
-    const { updateDate, author } = this.props.novel
-
-    return (
-      <View style={{ marginLeft: 18, marginRight: 18, marginTop: 5 }}>
-        <Text style={{ fontSize: 18, marginBottom: 5 }}>
-          Novel Information:
-        </Text>
-        <Text style={{ marginBottom: 5 }}>Source: Baka-Tsuki</Text>
-        <Text style={{ marginBottom: 5 }}>Update Date: {updateDate}</Text>
-        <Text style={{ marginBottom: 5 }}>Author: {author}</Text>
-      </View>
-    )
-  }
-
-  _renderOneShot = series => {
-    const { _onChapterPress } = this.props
-    return (
-      <View>
-        <Accordion
-          sections={[...series]}
-          renderHeader={section => {
-            return (
-              <View
-                style={{
-                  borderWidth: 1,
-                  padding: 15,
-                  backgroundColor: '#2980b9'
-                }}
-              >
-                <Text>{section.title}</Text>
-              </View>
-            )
-          }}
-          renderContent={section => {
-            return (
-              <List style={{ paddingTop: 0 }}>
-                {section.chapters.map((el, i) => {
-                  return (
-                    <ListItem
-                      titleNumberOfLines={5}
-                      title={el.title}
-                      key={i}
-                      onPress={_onChapterPress.bind(null, el)}
-                    />
-                  )
-                })}
-              </List>
-            )
-          }}
-        />
       </View>
     )
   }
@@ -205,61 +135,19 @@ export default class NovelComponent extends React.PureComponent {
     const { series, one_off } = this.props.novel
     const { _onChapterPress } = this.props
 
-    if (one_off) return this._renderOneShot(series)
+    if (one_off)
+      return (
+        <OneShotVolumeComponent
+          series={series}
+          _onChapterPress={_onChapterPress}
+        />
+      )
     else
       return (
-        <View>
-          <Accordion
-            sections={[...series]}
-            renderHeader={section => {
-              return (
-                <View
-                  style={{
-                    borderWidth: 1,
-                    padding: 15,
-                    backgroundColor: '#2980b9'
-                  }}
-                >
-                  <Text>{section.title}</Text>
-                </View>
-              )
-            }}
-            renderContent={section => {
-              return (
-                <List style={{ paddingTop: 0 }}>
-                  <Accordion
-                    sections={[...section.books]}
-                    renderHeader={section => {
-                      return (
-                        <View
-                          style={{
-                            borderWidth: 1,
-                            padding: 15,
-                            backgroundColor: '#bdc3c7'
-                          }}
-                        >
-                          <Text numberOfLines={5}>{section.title}</Text>
-                        </View>
-                      )
-                    }}
-                    renderContent={section => {
-                      return section.chapters.map((el, i) => {
-                        return (
-                          <ListItem
-                            titleNumberOfLines={5}
-                            title={el.title}
-                            key={i}
-                            onPress={_onChapterPress.bind(null, el)}
-                          />
-                        )
-                      })
-                    }}
-                  />
-                </List>
-              )
-            }}
-          />
-        </View>
+        <NormalVolumeComponent
+          series={series}
+          _onChapterPress={_onChapterPress}
+        />
       )
   }
 }
